@@ -34,8 +34,14 @@ func Inv(w Word) Word {
 func Reduce(w Word) Word {
 	r := Word{} //r stands for reversed
 	for _, s := range w {
-		if len(r) > 0 && r[len(r)-1][0] == s[0] {
-			r[len(r)-1] =  [2]int{s[0], s[1] + r[len(r)-1][1]}
+		if len(r) > 0 && r[len(r)-1][1] == 0 {
+			continue //ignore 0 exponents
+		} else if len(r) > 0 && r[len(r)-1][0] == s[0] {
+			if s[1] + r[len(r)-1][1] == 0 {
+				r = r[:len(r)-1] //remove 0 exponent
+			} else {
+				r[len(r)-1] =  [2]int{s[0], s[1] + r[len(r)-1][1]} //combine exponents
+			}
 		} else {
 			r = append(r, s)
 		}
