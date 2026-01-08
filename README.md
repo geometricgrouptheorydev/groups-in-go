@@ -6,9 +6,9 @@ An implementation of mathematical groups in Go, designed by a geometric group th
 
 I’m an Oxford mathematics graduate who specialized in geometric group theory. This project has several aims, the most personal of which is to build a bridge between my mathematical background and my programming skills.
 
-There’s a good reason for that: I loved group theory, but programming is, at present, far more directly useful to society. I hope this project can serve as a bridge for other people too, and encourage more practical applications of the beautiful theory of groups.
+There’s a good reason for that: I loved group theory, but programming is, at present, far more directly useful to society. I hope this project can serve as a bridge for other people too, and encourage more practical applications of the beautiful theory of groups. Groups are extremely common objects in mathematics, so there’s plenty of untapped potential!
 
-(Groups are extremely common objects in mathematics, so there’s plenty of untapped potential!)
+With the arrival of generics in Go 1.18 (2022), it finally became realistic to model mathematical structures in a way that feels natural. This project is my attempt to bring the world of group theory into a modern, strongly typed language, in a style that could plausibly fit a "math/group" package in the Go standard library.
 
 ## Quickstart
 
@@ -20,7 +20,7 @@ A CLI tool is planned for the future; once it exists, I’ll add installation an
 
 ## Dependencies
 
-For the core libraries, I’m not using any external dependencies (not even the Go standard library yet!).
+For the core libraries, I’m not using any external dependencies. From the Go standard libary, I use only the errors package so far.
 
 The CLI will use the standard library, of course. Once the CLI incorporates SQL (Postgres + migration / query tooling), I’ll list those dependencies here.
 
