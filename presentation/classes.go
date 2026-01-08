@@ -9,6 +9,7 @@ const (
 	OneRelator Class = "one_relator"
 	Abelian Class = "abelian"
 	Cyclic Class = "cyclic"
+	Finite Class = "finite"
 )
 
 var supportedClasses = map[Class]struct{}{
@@ -17,8 +18,28 @@ var supportedClasses = map[Class]struct{}{
 	OneRelator: {},
 	Abelian: {},
 	Cyclic: {},
+	Finite: {},
 }
 
-var FreeGroupClasses = map[Class]struct{}{
+//helper to copy class maps definied here without mutating them
+func addClasses(oldClasses, newClasses map[Class]struct{}) map[Class]struct{} {
+	for c := range newClasses { oldClasses[c] = struct{}{} }
+	return oldClasses
+}
+
+var freeGroupClasses = map[Class]struct{}{
 	Free: {},
+}
+
+var oneRelatorGroupClasses = map[Class]struct{}{
+	OneRelator: {},
+}
+
+var cyclcGroupClasses = map[Class]struct{}{
+	Cyclic: {},
+	Abelian: {},
+}
+
+var abelianGroupClasses = map[Class]struct{}{
+	Abelian: {},
 }

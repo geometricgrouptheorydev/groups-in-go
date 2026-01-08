@@ -7,7 +7,7 @@ func NewFreeGroup(rank int) (GroupPresentation, error){
 	G := GroupPresentation{
 		gen: rank, 
 		rel: make([]Word, 0),
-		classes: FreeGroupClasses,
+		classes: addClasses(make(map[Class]struct{}), freeGroupClasses),
 		}
 	switch rank {
 	case 0:

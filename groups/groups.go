@@ -26,3 +26,17 @@ func Pow[T any](G Group[T], x T, n int) T {
 	}
 	return result
 }
+
+//Products of more than two elements at once
+func Prod[T any](G Group[T], elem []T) T {
+	result := G.Id()
+	for _, x := range elem {
+		G.Mu(result, x)
+	}
+	return result
+}
+
+//Commutator of x and y
+func Comm[T any](G Group[T], x T, y T) T {
+	return Prod(G, []T{x, y, G.Inv(x), G.Inv(y)})
+}

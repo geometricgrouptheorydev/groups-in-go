@@ -61,3 +61,20 @@ func IsSubword(self, other Word) bool {
 	}
 	return false //all subwords don't match
 }
+
+//ShortLex reports whether a < b in shortlex order.
+func ShortLex(a, b Word) bool {
+    if len(a) != len(b) {
+        return len(a) < len(b)
+    }
+    // same length: lexicographic on (gen, exp)
+    for i := range a {
+        if a[i][0] != b[i][0] {
+            return a[i][0] < b[i][0]
+        }
+        if a[i][1] != b[i][1] {
+            return a[i][1] < b[i][1]
+        }
+    }
+    return false //equal
+}
