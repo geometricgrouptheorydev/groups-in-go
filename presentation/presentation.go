@@ -11,9 +11,10 @@ var (
 )
 
 type GroupPresentation struct {
-	gen int
-	rel []Word
-	classes map[Class]struct{}
+	gen int //generators
+	rel []Word //relations
+	classes map[Class]struct{} //classes we know the group is part of
+	negClasses map[Class]struct{} //classes we know the group is not part of
 }
 
 func TrivialPresentation() GroupPresentation{
@@ -41,42 +42,16 @@ func NewGroupPresentation(generators int, relations []Word) (GroupPresentation, 
 func initAddProperties(G GroupPresentation) GroupPresentation {
 	//one-relator
 	if len(G.rel) == 1 {
-		G.classes = addClasses(G.classes, oneRelatorGroupClasses)
+		G.addClasses(oneRelatorGroupClasses)
 	}
-	
-	//cyclicity and abelianity
+	//cyclicity
 	if G.gen == 1 {
-		G.classes = addClasses(G.classes, cyclcGroupClasses)
-	} else if initCheckCommutativityRelators(G) {
-		G.classes = addClasses(G.classes, abelianGroupClasses)
+		G.addClasses(cyclicGroupClasses)
 	}
 	return G
 }
 
-// initCheckCommutativityRelators reports whether all [x_i, x_j] are in rel.
-func initCheckCommutativityRelators(G GroupPresentation) bool {
-    for i := 0; i < G.gen; i++ {
-        for j := 0; j < i; j++ {
-            found := false
-            target1 := Word{{i, 1}, {j, 1}, {i, -1}, {j, -1}}
-            target2 := Word{{i, -1}, {j, -1}, {i, 1}, {j, 1}}
-            for _, r := range G.rel {
-				if len(r) != 4 {
-					continue
-				} else if EqualWord(r, target1) || EqualWord(r, target2) {
-                    found = true
-                    break
-                }
-            }
-            if !found {
-                return false
-            }
-        }
-    }
-    return true
-}
-
-//we want to implement group
+//we want to implement group.Group
 type Group[T any] = groups.Group[T]
 
 func (G GroupPresentation) Mu(v Word, w Word) Word {

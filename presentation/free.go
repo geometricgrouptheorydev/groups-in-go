@@ -7,8 +7,8 @@ func NewFreeGroup(rank int) (GroupPresentation, error){
 	G := GroupPresentation{
 		gen: rank, 
 		rel: make([]Word, 0),
-		classes: addClasses(make(map[Class]struct{}), freeGroupClasses),
 		}
+	G.addClasses(freeGroupClasses)
 	switch rank {
 	case 0:
 		G.classes[Trivial] = struct{}{}

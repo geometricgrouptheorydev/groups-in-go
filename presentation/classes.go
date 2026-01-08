@@ -22,20 +22,24 @@ var supportedClasses = map[Class]struct{}{
 }
 
 //helper to copy class maps definied here without mutating them
-func addClasses(oldClasses, newClasses map[Class]struct{}) map[Class]struct{} {
-	for c := range newClasses { oldClasses[c] = struct{}{} }
-	return oldClasses
+func (G GroupPresentation) addClasses(newClasses map[Class]struct{}) {
+	for c := range newClasses { G.classes[c] = struct{}{} }
 }
 
 var freeGroupClasses = map[Class]struct{}{
 	Free: {},
 }
 
+var freeGroupNegClasses = map[Class]struct{}{
+	Finite: {},
+	OneRelator: {},
+}
+
 var oneRelatorGroupClasses = map[Class]struct{}{
 	OneRelator: {},
 }
 
-var cyclcGroupClasses = map[Class]struct{}{
+var cyclicGroupClasses = map[Class]struct{}{
 	Cyclic: {},
 	Abelian: {},
 }
