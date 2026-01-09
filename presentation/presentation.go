@@ -13,12 +13,11 @@ var (
 type GroupPresentation struct {
 	gen int //generators
 	rel []Word //relations
-	classes map[Class]struct{} //classes we know the group is part of
-	negClasses map[Class]struct{} //classes we know the group is not part of
+	classes map[Class]bool //true means the group is in that class, false means it is not, and if a class is not a map key it means we don't know
 }
 
 func TrivialPresentation() GroupPresentation{
-	return GroupPresentation{classes: map[Class]struct{}{Trivial: {}}}
+	return GroupPresentation{classes: trivialGroupClasses}
 }
 
 //Arguments: number of generators and the relations. Invalid presentations return an error.

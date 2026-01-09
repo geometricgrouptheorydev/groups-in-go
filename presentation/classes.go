@@ -1,5 +1,9 @@
 package presentation
 
+import "errors"
+
+var ErrInternalGroupClassTruth = errors.New("error: truth conflict for a group class")
+
 //here we have all the supported group classes so far
 type Class string
 
@@ -21,29 +25,60 @@ var supportedClasses = map[Class]struct{}{
 	Finite: {},
 }
 
-//helper to copy class maps definied here without mutating them
-func (G GroupPresentation) addClasses(newClasses map[Class]struct{}) {
-	for c := range newClasses { G.classes[c] = struct{}{} }
+//helper to copy class maps definied here without mutating them. 
+//fallback to reset group classes upon error to be added
+func (G GroupPresentation) addClasses(newClasses map[Class]bool) error {
+	for c := range newClasses { 
+		if _, ok := G.classes[c]; !ok {
+			G.classes[c] = newClasses[c] 
+		} else if G.classes[c] != newClasses[c] {
+			return ErrInternalGroupClassTruth
+		}
+	}
+	return nil
 }
 
-var freeGroupClasses = map[Class]struct{}{
-	Free: {},
+//trivial group
+var trivialGroupClasses = map[Class]bool{
+	Trivial: true,
+	Free: true,
+	OneRelator: false,
+	Abelian: true,
+	Cyclic: true,
+	Finite: true,
 }
 
-var freeGroupNegClasses = map[Class]struct{}{
-	Finite: {},
-	OneRelator: {},
+//free on one generator
+var freeGroupOneGeneratorClasses = map[Class]bool{
+	Trivial: false,
+	Free: true,
+	OneRelator: false,
+	Abelian: true,
+	Cyclic: true,
+	Finite: false,
 }
 
-var oneRelatorGroupClasses = map[Class]struct{}{
-	OneRelator: {},
+//free with multiple generators
+var freeGroupMultipleGeneratorClasses = map[Class]bool{
+	Trivial: false,
+	Free: true,
+	OneRelator: false,
+	Abelian: false,
+	Cyclic: false,
+	Finite: false,
 }
 
-var cyclicGroupClasses = map[Class]struct{}{
-	Cyclic: {},
-	Abelian: {},
+//one relator groups
+var oneRelatorGroupClasses = map[Class]bool{
+	OneRelator: true,
 }
 
-var abelianGroupClasses = map[Class]struct{}{
-	Abelian: {},
+//cyclic groups
+var cyclicGroupClasses = map[Class]bool{
+	Cyclic: true,
+	Abelian: true,
+}
+
+var abelianGroupClasses = map[Class]bool{
+	Abelian: true,
 }

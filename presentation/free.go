@@ -8,13 +8,13 @@ func NewFreeGroup(rank int) (GroupPresentation, error){
 		gen: rank, 
 		rel: make([]Word, 0),
 		}
-	G.addClasses(freeGroupClasses)
 	switch rank {
 	case 0:
-		G.classes[Trivial] = struct{}{}
+		G.addClasses(trivialGroupClasses)
 	case 1:
-		G.classes[Abelian] = struct{}{}
-		G.classes[Cyclic] = struct{}{}
+		G.addClasses(freeGroupOneGeneratorClasses)
+	default:
+		G.addClasses(freeGroupMultipleGeneratorClasses)
 	}
 	return G, nil
 }
