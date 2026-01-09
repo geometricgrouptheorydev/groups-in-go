@@ -2,6 +2,7 @@ package presentation
 
 import (
 	"errors"
+	"fmt"
 	"github.com/geometricgrouptheorydev/groups-in-go/groups"
 )
 
@@ -50,7 +51,20 @@ func initAddProperties(G GroupPresentation) GroupPresentation {
 	return G
 }
 
+//WARNING: just like for the Group[T any] interface, words are not by default checked if they're actually in the group before the operation is applied
+//this will lead to varying behavior for out-of-range generators depending on G.classes
+//the following O(n) function lets you check this automatically at an O(n) cost, useful for long words that are hard to check manually
+func (G GroupPresentation) IsValidWord(w Word) error{
+	for i, u := range w {
+		if u[0] >= G.gen || u[0] < 0 {
+			return fmt.Errorf("invalid generator %v at word index %v", u[0], i)
+		}
+	}
+	return nil
+}
+
 //we want to implement group.Group
+//again, use the above IsValidWord method if you wan to verify the inputted words are valid first
 type Group[T any] = groups.Group[T]
 
 func (G GroupPresentation) Mu(v Word, w Word) Word {

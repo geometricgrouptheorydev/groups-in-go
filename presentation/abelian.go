@@ -2,6 +2,7 @@ package presentation
 
 //CheckForCommutativityRelators reports whether all [x_i, x_j] are in rel.
 //This check is not in initAddProperties because of its time complexity of O(n^2m) which will make it slower for larger presentations
+//A more comprehensive check TBA
 func (G GroupPresentation) CheckForCommutativityRelators() bool {
 	if _, ok := G.classes[Abelian]; ok {
 		return true

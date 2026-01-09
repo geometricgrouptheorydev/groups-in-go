@@ -163,3 +163,53 @@ func TestIsSubword(t *testing.T) {
 		})
 	}
 }
+
+func TestShortLex(t *testing.T) {
+	type Word = presentation.Word
+
+	tests := []struct{
+		name string
+		smaller Word
+		bigger Word
+		want bool
+	}{
+		{
+			name: "unequal length words true",
+			bigger: Word{{1,2},{2,-3},{6,-7},{3,1},{4,7}},
+			smaller: Word{{6,-7},{3,1}},
+			want: true,
+		},
+		{
+			name: "equal length words true",
+			smaller: Word{{1,2},{2,-3},{6,-7},{3,1},{4,7}},
+			bigger: Word{{6,-2},{2,-3},{6,-7},{3,1},{4,7}},
+			want: true,
+		},
+		{
+			name: "unequal length words false",
+			bigger: Word{{1,2},{2,-3},{6,-7}},
+			smaller: Word{{5,-8},{3,1},{4,3},{17,8}},
+			want: false,
+		},
+		{
+			name: "same words",
+			bigger: Word{{1,2},{2,-3},{6,-7}},
+			smaller: Word{{1,2},{2,-3},{6,-7}},
+			want: false,
+		},
+		{
+			name: "equal length words false",
+			bigger: Word{{5,-8},{3,1},{4,3},{17,8}},
+			smaller: Word{{5,-8},{3,1},{4,3},{17,9}},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := presentation.ShortLex(tt.smaller, tt.bigger)
+			if got != tt.want {
+				t.Fatalf("ShortLex(%v, %v) = %v, want %v", tt.smaller, tt.bigger, got, tt.want)
+			}
+		})
+	}
+}

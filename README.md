@@ -20,7 +20,7 @@ A CLI tool is planned for the future; once it exists, I’ll add installation an
 
 ## Dependencies
 
-For the core libraries, I’m not using any external dependencies. From the Go standard libary, I use only the errors package so far.
+For the core libraries, I’m not using any external dependencies. From the Go standard libary, I use only the errors and fmt packages (for error handling) so far.
 
 The CLI will use the standard library, of course. Once the CLI incorporates SQL (Postgres + migration / query tooling), I’ll list those dependencies here.
 
