@@ -2,10 +2,12 @@ package groups
 
 //We set up the Group interface, which will let users use groups formed from outisde libraries
 //Group axioms to be verified mathematically
+//Consistency between the methods below to be verified mathematically too
 type Group[T any] interface {
 	Mu(T, T) T //mu is a common greek letter to represent binary operations in algebra
 	Id() T //Identity, common math abbreviation
 	Inv(T) T //Inverse
+	Equal(T, T) bool //as we're allowing T be be uncomparable for Go standards, so we need to define our own equality method
 }
 
 //conjugates x by y

@@ -78,3 +78,8 @@ func (G GroupPresentation) Inv(v Word) Word {
 func (G GroupPresentation) Id() Word {
 	return Word{}
 }
+
+//WARNING: if the word problem is not solvable for your particular presentation, false does not guarantee inequality
+func (G GroupPresentation) Equal(v Word, w Word) bool {
+	 return len(G.Mu(v,G.Inv(w))) == 0 //checks if vw^-1 is the empty word
+}
