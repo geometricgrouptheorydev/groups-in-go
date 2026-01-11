@@ -35,7 +35,7 @@ func NewGroupPresentation(generators int, relations []Word) (GroupPresentation, 
 			}
 		}
 	}
-	return initAddProperties(GroupPresentation{gen: generators, rel: relations}), nil
+	return initAddProperties(GroupPresentation{gen: generators, rel: relations, classes: make(map[Class]bool)}), nil
 }
 
 //helper to initialize the group presentation with its properties
