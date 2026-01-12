@@ -28,27 +28,34 @@ func NewGroupPresentation(generators int, relations []Word) (GroupPresentation, 
 	} else if len(relations) == 0 {
 		return NewFreeGroup(generators) //we'll deal with this case separately because free groups are so cool
 	}
+	reducedRelations := make([]Word, len(relations)) //we reduce relations provided if possible
 	for _, r := range relations {
 		for _, p := range r {
 			if p[0] < 0 || p[0] >= generators {
 				return GroupPresentation{}, ErrInvalidRelation
 			}
+			reduced := Reduce(r)
+			if len(reduced) > 0 {
+				reducedRelations = append(reducedRelations, reduced) //empty words are not to be added in rel!
+			}
 		}
 	}
-	return initAddProperties(GroupPresentation{gen: generators, rel: relations, classes: make(map[Class]bool)}), nil
+	return initAddProperties(GroupPresentation{gen: generators, rel: reducedRelations, classes: make(map[Class]bool)})
 }
 
 //helper to initialize the group presentation with its properties
-func initAddProperties(G GroupPresentation) GroupPresentation {
-	//one-relator
+//includes only checks that are O(n^2) or better to match with NewGroupPresentation
+func initAddProperties(G GroupPresentation) (GroupPresentation, error) {
+	//one-relator and freedom
 	if len(G.rel) == 1 {
-		G.addClasses(oneRelatorGroupClasses)
+		err := G.addClasses(oneRelatorGroupClasses)
+		return G, err
 	}
 	//cyclicity
 	if G.gen == 1 {
 		G.addClasses(cyclicGroupClasses)
 	}
-	return G
+	return G, nil
 }
 
 //WARNING: just like for the Group[T any] interface, words are not by default checked if they're actually in the group before the operation is applied

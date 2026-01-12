@@ -19,11 +19,16 @@ func (G GroupPresentation) CheckCommutativityRelators() (bool, bool, error) {
     }
 
     //tackling trivial cases in O(1) time
+    //classes already added in construction of these groups
     switch G.gen {
     case 0:
-        return true, true, nil //classes already added in construction
+        return true, true, nil
     case 1:
-        return true, false, nil //checking freeness TBA
+        if len(G.rel) == 0 {
+            return true, true, nil
+        } else {
+            return true, false, nil //useless relations are already discared with in NewGroupPresentation so we have a finite cyclic group here
+        }
     }
 
     onlyCommutativityRelators := true
