@@ -7,7 +7,7 @@ type Word [][2]int
 
 func EmptyWord() Word            { return Word{} }
 func Single(gen, exp int) Word   { return Word{{gen, exp}} }
-func Concat(a, b Word) Word          { return append(append(Word{}, a...), b...) } //double appends for immutability
+func Concat(a, b Word) Word      { return append(append(Word{}, a...), b...) } //double appends for immutability
 
 //checks if two words are equal
 func EqualWord(u, v Word) bool {
@@ -40,7 +40,7 @@ func Reduce(w Word) Word {
 			if s[1] + r[len(r)-1][1] == 0 {
 				r = r[:len(r)-1] //remove 0 exponent
 			} else {
-				r[len(r)-1] =  [2]int{s[0], s[1] + r[len(r)-1][1]} //combine exponents
+				r[len(r)-1] = [2]int{s[0], s[1] + r[len(r)-1][1]} //combine exponents
 			}
 		} else {
 			r = append(r, s)
@@ -77,4 +77,38 @@ func ShortLex(a, b Word) bool {
         }
     }
     return false //equal
+}
+
+//find higher generator index in a Word w
+func MaxGen(w Word) int {
+	gens := 0
+	for _, u := range w {
+		if u[0] > gens {
+			gens = u[0]
+		}
+	}
+	return gens
+}
+
+//reduction to shortlex order that ignores commutativty used for abelian groups only
+//second argument should be the largest generator index in w (any generator index larger than gens will result in a panic so this function is not exported!)
+//GroupPresentation functions use G.gen for gens so not to waste resources on an extra loop
+func abelianReduce(w Word, gens int) Word {
+	exps := make([]int, gens)
+	for _, u := range w {
+		exps[u[0]] += u[1]
+	}
+	reduced := make(Word, 0, gens)
+	for i := range exps {
+		if exps[i] != 0 {
+			reduced = append(reduced, [2]int{i, exps[i]})
+		}
+	}
+	return reduced
+}
+
+//abelianReduce but safe
+func AbelianReduce(w Word) Word {
+	gens := MaxGen(w)
+	return abelianReduce(w, gens)
 }
