@@ -32,7 +32,7 @@ func Inv(w Word) Word {
 }
 
 func Reduce(w Word) Word {
-	r := Word{} //r stands for reversed
+	r := make(Word, 0, len(w)) //r stands for reversed
 	for _, s := range w {
 		if len(r) > 0 && r[len(r)-1][1] == 0 {
 			continue //ignore 0 exponents

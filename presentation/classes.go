@@ -27,7 +27,7 @@ var supportedClasses = map[Class]struct{}{
 
 //helper to copy class maps definied here without mutating them. 
 //fallback to reset group classes upon error to be added
-func (G GroupPresentation) addClasses(newClasses map[Class]bool) error {
+func (G *GroupPresentation) addClasses(newClasses map[Class]bool) error {
 	for c := range newClasses { 
 		if _, ok := G.classes[c]; !ok {
 			G.classes[c] = newClasses[c] 
@@ -110,14 +110,4 @@ var cyclicGroupClasses = map[Class]bool{
 //abelian groups
 var abelianGroupClasses = map[Class]bool{
 	Abelian: true,
-}
-
-//non-free-abelian
-var nonFreeAbelianGroupClasses = map[Class]bool{
-	FreeAbelian: false, 
-}
-
-//non-abelian
-var nonAbelianGroupClasses = map[Class]bool{
-	Abelian: false,
 }

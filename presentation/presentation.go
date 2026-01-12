@@ -34,10 +34,10 @@ func NewGroupPresentation(generators int, relations []Word) (GroupPresentation, 
 			if p[0] < 0 || p[0] >= generators {
 				return GroupPresentation{}, ErrInvalidRelation
 			}
-			reduced := Reduce(r)
-			if len(reduced) > 0 {
-				reducedRelations = append(reducedRelations, reduced) //empty words are not to be added in rel!
-			}
+		reduced := Reduce(r)
+		if len(reduced) > 0 {
+			reducedRelations = append(reducedRelations, reduced) //empty words are not to be added in rel!
+		}
 		}
 	}
 	return initAddProperties(GroupPresentation{gen: generators, rel: reducedRelations, classes: make(map[Class]bool)})

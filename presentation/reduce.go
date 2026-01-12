@@ -6,22 +6,16 @@ package presentation
 //the higher the priority the better the reduction algorithm for computation!
 var reduceCLassPriority = []Class{Trivial, Cyclic, FreeAbelian, Abelian, Free, OneRelator}
 
-var reduceHandles = map[Class]func(GroupPresentation, Word) Word{
-	Trivial: GroupPresentation.handleReduceTrivial,
-	Cyclic: GroupPresentation.handleReduceCyclic,
-	Abelian: GroupPresentation.handleReduceAbelian,
-	Free: GroupPresentation.handleReduceFree,
-	OneRelator: GroupPresentation.handleReduceOneRelator,
-}
-
 func (G GroupPresentation) Reduce(w Word) Word {
 	for _, c := range reduceCLassPriority {
 		if val, ok := G.classes[c]; val && ok {
 			switch c{
 			case Trivial:
-				return G.handleReduceTrivial(w)
+				return Word{}
 			case Cyclic:
 				return G.handleReduceCyclic(w)
+			case FreeAbelian:
+				return G.handleReduceFreeAbelian(w)
 			case Abelian:
 				return G.handleReduceAbelian(w)
 			case Free:
@@ -34,26 +28,32 @@ func (G GroupPresentation) Reduce(w Word) Word {
 	return Word{}
 }
 
-func (G GroupPresentation) handleReduceTrivial(w Word) Word{
-	return Word{}
-}
-
+//O(n)
 func (G GroupPresentation) handleReduceCyclic(w Word) Word{
-	return Word{}
+	G.SimplifyCyclicPresentation()
+	wordExp := Reduce(w)[0][1]
+	relExp := G.rel[0][0][1]
+	newExp := wordExp % relExp
+	if newExp < 0 {
+		newExp = -newExp
+	} else if newExp == 0 {
+		return Word{}
+	}
+	return Word{{0, newExp}}
 }
 
 func (G GroupPresentation) handleReduceFreeAbelian(w Word) Word{
-	return Word{}
+	return w
 }
 
 func (G GroupPresentation) handleReduceAbelian(w Word) Word{
-	return Word{}
+	return w
 }
 
 func (G GroupPresentation) handleReduceFree(w Word) Word {
-	return Word{}
+	return w
 }
 
 func (G GroupPresentation) handleReduceOneRelator(w Word) Word{
-	return Word{}
+	return w
 }
