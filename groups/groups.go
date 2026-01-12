@@ -10,7 +10,7 @@ type Group[T any] interface {
 	Equal(T, T) bool //as we're allowing T be be uncomparable for Go standards, so we need to define our own equality method
 }
 
-//conjugates x by y
+//conjugates x by y. we take the y^-1xy convention
 func Conj[T any](G Group[T], x T, y T) T {
 	return G.Mu(G.Mu(G.Inv(y), x), y)
 }
@@ -39,6 +39,7 @@ func Prod[T any](G Group[T], elem []T) T {
 }
 
 //Commutator of x and y
+//we take the x^-1y^-1xy convention
 func Comm[T any](G Group[T], x T, y T) T {
-	return Prod(G, []T{x, y, G.Inv(x), G.Inv(y)})
+	return Prod(G, []T{G.Inv(x), G.Inv(y), x, y})
 }

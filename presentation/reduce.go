@@ -4,7 +4,7 @@ package presentation
 //reductions ordered in levels of power
 
 //the higher the priority the better the reduction algorithm for computation!
-var reduceCLassPriority = []Class{Trivial, Cyclic, Abelian, Free, OneRelator}
+var reduceCLassPriority = []Class{Trivial, Cyclic, FreeAbelian, Abelian, Free, OneRelator}
 
 var reduceHandles = map[Class]func(GroupPresentation, Word) Word{
 	Trivial: GroupPresentation.handleReduceTrivial,
@@ -39,6 +39,10 @@ func (G GroupPresentation) handleReduceTrivial(w Word) Word{
 }
 
 func (G GroupPresentation) handleReduceCyclic(w Word) Word{
+	return Word{}
+}
+
+func (G GroupPresentation) handleReduceFreeAbelian(w Word) Word{
 	return Word{}
 }
 

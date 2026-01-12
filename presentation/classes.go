@@ -1,8 +1,6 @@
 package presentation
 
-import "errors"
-
-var ErrInternalGroupClassTruth = errors.New("error: truth conflict for a group class")
+import "fmt"
 
 //here we have all the supported group classes so far
 type Class string
@@ -10,6 +8,7 @@ type Class string
 const (
 	Trivial Class = "trivial"
 	Free Class = "free"
+	FreeAbelian Class = "free_abelian"
 	OneRelator Class = "one_relator"
 	Abelian Class = "abelian"
 	Cyclic Class = "cyclic"
@@ -19,6 +18,7 @@ const (
 var supportedClasses = map[Class]struct{}{
 	Trivial: {},
 	Free: {},
+	FreeAbelian: {},
 	OneRelator: {},
 	Abelian: {},
 	Cyclic: {},
@@ -32,16 +32,20 @@ func (G GroupPresentation) addClasses(newClasses map[Class]bool) error {
 		if _, ok := G.classes[c]; !ok {
 			G.classes[c] = newClasses[c] 
 		} else if G.classes[c] != newClasses[c] {
-			return ErrInternalGroupClassTruth
+			return fmt.Errorf("error: internal truth value conflict for group class %v", c)
 		}
 	}
 	return nil
 }
 
+//below are internal arguments used in addClasses calls elsewhere
+//not to be mutated
+
 //trivial group
 var trivialGroupClasses = map[Class]bool{
 	Trivial: true,
 	Free: true,
+	FreeAbelian: true,
 	OneRelator: false,
 	Abelian: true,
 	Cyclic: true,
@@ -52,6 +56,7 @@ var trivialGroupClasses = map[Class]bool{
 var freeGroupOneGeneratorClasses = map[Class]bool{
 	Trivial: false,
 	Free: true,
+	FreeAbelian: true,
 	OneRelator: false,
 	Abelian: true,
 	Cyclic: true,
@@ -62,8 +67,31 @@ var freeGroupOneGeneratorClasses = map[Class]bool{
 var freeGroupMultipleGeneratorClasses = map[Class]bool{
 	Trivial: false,
 	Free: true,
+	FreeAbelian: false,
 	OneRelator: false,
 	Abelian: false,
+	Cyclic: false,
+	Finite: false,
+}
+
+//free abelian with 3+ generators
+var freeAbelianGroupMultipleGeneratorClasses = map[Class]bool{
+	Trivial: false,
+	Free: false,
+	FreeAbelian: true,
+	OneRelator: false,
+	Abelian: true,
+	Cyclic: false,
+	Finite: false,
+}
+
+//free abelian with 2 generators
+var freeAbelianGroup2GeneratorClasses = map[Class]bool{
+	Trivial: false,
+	Free: false,
+	FreeAbelian: true,
+	OneRelator: true,
+	Abelian: true,
 	Cyclic: false,
 	Finite: false,
 }
@@ -79,6 +107,17 @@ var cyclicGroupClasses = map[Class]bool{
 	Abelian: true,
 }
 
+//abelian groups
 var abelianGroupClasses = map[Class]bool{
 	Abelian: true,
+}
+
+//non-free-abelian
+var nonFreeAbelianGroupClasses = map[Class]bool{
+	FreeAbelian: false, 
+}
+
+//non-abelian
+var nonAbelianGroupClasses = map[Class]bool{
+	Abelian: false,
 }
