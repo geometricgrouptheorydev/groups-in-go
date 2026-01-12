@@ -4,10 +4,16 @@ package groups
 //Group axioms to be verified mathematically
 //Consistency between the methods below to be verified mathematically too
 type Group[T any] interface {
-	Mu(T, T) T //mu is a common greek letter to represent binary operations in algebra
-	Id() T //Identity, common math abbreviation
-	Inv(T) T //Inverse
-	Equal(T, T) bool //as we're allowing T be be uncomparable for Go standards, so we need to define our own equality method
+	//mu is a common greek letter to represent binary operations in algebra
+	Mu(T, T) T 
+	//Identity, common math abbreviation
+	Id() T 
+	//Inverse
+	Inv(T) T 
+	//as we're allowing T be be uncomparable for Go standards, so we need to define our own equality method.
+	//WARNING: Equal(x,y) = false does not guarantee x and y to be not equal in the group due to the word problem being unsolvable in general
+	//but Equal(x,y) = true should always guarantee x = y in the group
+	Equal(T, T) bool 
 }
 
 //conjugates x by y. we take the y^-1xy convention
