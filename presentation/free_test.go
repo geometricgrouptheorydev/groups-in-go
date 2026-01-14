@@ -5,7 +5,7 @@ import (
 	p "github.com/geometricgrouptheorydev/groups-in-go/presentation"
 )
 
-//testing presentation builder
+//testing IsValidWord
 func TestIsValidWord(t *testing.T) {
 	type Word = p.Word
 	G, err := p.NewFreeGroup(6)
