@@ -21,7 +21,7 @@ func (G GroupPresentation) Reduce(w Word) (Word, error) {
 			case Abelian:
 				return G.handleReduceAbelian(w), nil
 			case Free:
-				return G.handleReduceFree(w), nil
+				return Reduce(w), nil //plain old word reduction
 			case OneRelator:
 				return G.handleReduceOneRelator(w), nil
 			}
@@ -50,10 +50,6 @@ func (G GroupPresentation) handleReduceFreeAbelian(w Word) Word{
 }
 
 func (G GroupPresentation) handleReduceAbelian(w Word) Word{
-	return w
-}
-
-func (G GroupPresentation) handleReduceFree(w Word) Word {
 	return w
 }
 
