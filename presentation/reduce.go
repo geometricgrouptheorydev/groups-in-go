@@ -23,7 +23,7 @@ func (G GroupPresentation) Reduce(w WordSlice) (WordSlice, error) {
 			case Abelian:
 				return G.handleReduceAbelian(w), nil
 			case Free:
-				return Reduce(w), nil //plain old word reduction
+				return ReduceWordSlice(w), nil //plain old word reduction
 			case OneRelator:
 				return G.handleReduceOneRelator(w), nil
 			}
@@ -35,7 +35,7 @@ func (G GroupPresentation) Reduce(w WordSlice) (WordSlice, error) {
 // O(n)
 func (G GroupPresentation) handleReduceCyclic(w WordSlice) WordSlice {
 	G.SimplifyCyclicPresentation()
-	wordExp := Reduce(w)[0][1]
+	wordExp := ReduceWordSlice(w)[0][1]
 	relExp := G.rel[0][0][1]
 	newExp := wordExp % relExp
 	if newExp < 0 {
@@ -48,7 +48,7 @@ func (G GroupPresentation) handleReduceCyclic(w WordSlice) WordSlice {
 
 // O(n)
 func (G GroupPresentation) handleReduceFreeAbelian(w WordSlice) WordSlice {
-	return abelianReduce(w, G.gen)
+	return abelianReduceWordSlice(w, G.gen)
 }
 
 func (G GroupPresentation) handleReduceAbelian(w WordSlice) WordSlice {

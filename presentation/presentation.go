@@ -35,7 +35,7 @@ func NewGroupPresentation(generators int, relations []WordSlice) (GroupPresentat
 			if p[0] < 0 || p[0] >= generators {
 				return GroupPresentation{}, ErrInvalidRelation
 			}
-			reduced := Reduce(r)
+			reduced := ReduceWordSlice(r)
 			if len(reduced) > 0 {
 				reducedRelations = append(reducedRelations, reduced) //empty words are not to be added in rel!
 			}
@@ -76,11 +76,11 @@ func (G GroupPresentation) IsValidWord(w WordSlice) error {
 type Group[T any] = groups.Group[T]
 
 func (G GroupPresentation) Mu(v WordSlice, w WordSlice) WordSlice {
-	return Reduce(Concat(v, w))
+	return ReduceWordSlice(Concat(v, w))
 }
 
 func (G GroupPresentation) Inv(v WordSlice) WordSlice {
-	return Inv(v)
+	return InvWordSlice(v)
 }
 
 func (G GroupPresentation) Id() WordSlice {

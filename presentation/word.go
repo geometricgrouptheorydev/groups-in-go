@@ -10,7 +10,7 @@ func Single(gen, exp int) WordSlice   { return WordSlice{{gen, exp}} }
 func Concat(a, b WordSlice) WordSlice { return append(append(WordSlice{}, a...), b...) } //double appends for immutability
 
 // checks if two words are equal
-func EqualWord(u, v WordSlice) bool {
+func EqualWordSlice(u, v WordSlice) bool {
 	if len(u) != len(v) {
 		return false
 	}
@@ -22,7 +22,7 @@ func EqualWord(u, v WordSlice) bool {
 	return true
 }
 
-func Inv(w WordSlice) WordSlice {
+func InvWordSlice(w WordSlice) WordSlice {
 	n := len(w)
 	v := WordSlice{}
 	for i := 1; i <= n; i++ { //list comprehensions at home
@@ -31,7 +31,7 @@ func Inv(w WordSlice) WordSlice {
 	return v
 }
 
-func Reduce(w WordSlice) WordSlice {
+func ReduceWordSlice(w WordSlice) WordSlice {
 	r := make(WordSlice, 0, len(w)) //r stands for reversed
 	for _, s := range w {
 		if len(r) > 0 && r[len(r)-1][1] == 0 {
@@ -50,22 +50,22 @@ func Reduce(w WordSlice) WordSlice {
 }
 
 // checks if self is a subword of other
-func IsSubword(self, other WordSlice) bool {
-	sub := Reduce(self)
-	whole := Reduce(other)
+func IsSubWordSlice(self, other WordSlice) bool {
+	sub := ReduceWordSlice(self)
+	whole := ReduceWordSlice(other)
 	if len(whole) < len(sub) {
 		return false
 	}
 	for i := range whole {
-		if EqualWord(sub, whole[i:i+len(sub)]) {
+		if EqualWordSlice(sub, whole[i:i+len(sub)]) {
 			return true //match found
 		}
 	}
 	return false //all subwords don't match
 }
 
-// ShortLex reports whether a < b in shortlex order.
-func ShortLex(a, b WordSlice) bool {
+// ShortLexWordSlice reports whether a < b in shortlex order.
+func ShortLexWordSlice(a, b WordSlice) bool {
 	if len(a) != len(b) {
 		return len(a) < len(b)
 	}
@@ -82,7 +82,7 @@ func ShortLex(a, b WordSlice) bool {
 }
 
 // find higher generator index in a Word w
-func MaxGen(w WordSlice) int {
+func MaxGenWordSlice(w WordSlice) int {
 	gens := 0
 	for _, u := range w {
 		if u[0] > gens {
@@ -95,7 +95,7 @@ func MaxGen(w WordSlice) int {
 // reduction to shortlex order that ignores commutativty used for abelian groups only
 // second argument should be the largest generator index in w (any generator index larger than gens will result in a panic so this function is not exported!)
 // GroupPresentation functions use G.gen for gens so not to waste resources on an extra loop
-func abelianReduce(w WordSlice, gens int) WordSlice {
+func abelianReduceWordSlice(w WordSlice, gens int) WordSlice {
 	exps := make([]int, gens)
 	for _, u := range w {
 		exps[u[0]] += u[1]
@@ -110,7 +110,7 @@ func abelianReduce(w WordSlice, gens int) WordSlice {
 }
 
 // abelianReduce but safe
-func AbelianReduce(w WordSlice) WordSlice {
-	gens := MaxGen(w)
-	return abelianReduce(w, gens)
+func AbelianReduceWordSlice(w WordSlice) WordSlice {
+	gens := MaxGenWordSlice(w)
+	return abelianReduceWordSlice(w, gens)
 }

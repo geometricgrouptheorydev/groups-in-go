@@ -28,7 +28,7 @@ func TestNewGroupPresentation(t *testing.T) {
 				t.Fatalf("wanted error %v got error %v", tt.wantErr, err)
 			}
 			for i := range tt.rel {
-				if !p.EqualWord(tt.rel[i], tt.wantRel[i]) {
+				if !p.EqualWordSlice(tt.rel[i], tt.wantRel[i]) {
 					break
 				}
 			}

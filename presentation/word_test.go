@@ -49,7 +49,7 @@ func TestEqualWord(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := presentation.EqualWord(tt.first, tt.second)
+			got := presentation.EqualWordSlice(tt.first, tt.second)
 			if got != tt.want {
 				t.Fatalf("EqualWord(%v, %v) = %v, want %v", tt.first, tt.second, got, tt.want)
 			}
@@ -89,8 +89,8 @@ func TestInverse(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := presentation.Inv(tt.in)
-			if !presentation.EqualWord(got, tt.want) {
+			got := presentation.InvWordSlice(tt.in)
+			if !presentation.EqualWordSlice(got, tt.want) {
 				t.Fatalf("Inverse(%v) = %v, want %v", tt.in, got, tt.want)
 			}
 		})
@@ -124,8 +124,8 @@ func TestReduce(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := presentation.Reduce(tt.in)
-			if !presentation.EqualWord(got, tt.want) {
+			got := presentation.ReduceWordSlice(tt.in)
+			if !presentation.EqualWordSlice(got, tt.want) {
 				t.Fatalf("Reduce(%v) = %v, want %v", tt.in, got, tt.want)
 			}
 		})
@@ -157,7 +157,7 @@ func TestIsSubword(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := presentation.IsSubword(tt.sub, tt.whole)
+			got := presentation.IsSubWordSlice(tt.sub, tt.whole)
 			if got != tt.want {
 				t.Fatalf("IsSubword(%v, %v) = %v, want %v", tt.sub, tt.whole, got, tt.want)
 			}
@@ -207,7 +207,7 @@ func TestShortLex(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := presentation.ShortLex(tt.smaller, tt.bigger)
+			got := presentation.ShortLexWordSlice(tt.smaller, tt.bigger)
 			if got != tt.want {
 				t.Fatalf("ShortLex(%v, %v) = %v, want %v", tt.smaller, tt.bigger, got, tt.want)
 			}

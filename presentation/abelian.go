@@ -43,7 +43,7 @@ func (G GroupPresentation) CheckCommutativityRelators() (bool, bool, error) {
 				if len(r) != 4 {
 					onlyCommutativityRelators = false //r is not a commutativity relator for sure
 					continue
-				} else if EqualWord(r, target1) || EqualWord(r, target2) {
+				} else if EqualWordSlice(r, target1) || EqualWordSlice(r, target2) {
 					found = true
 					foundCount++
 					break
