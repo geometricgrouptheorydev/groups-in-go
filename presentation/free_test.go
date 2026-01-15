@@ -2,28 +2,31 @@ package presentation_test
 
 import (
 	"testing"
+
 	p "github.com/geometricgrouptheorydev/groups-in-go/presentation"
 )
 
-//testing IsValidWord
+// testing IsValidWord
 func TestIsValidWord(t *testing.T) {
-	type Word = p.Word
+	type Word = p.WordSlice
 	G, err := p.NewFreeGroup(6)
-	if err != nil { t.Fatal("can't make a new free group (rank 6) smh!") }
+	if err != nil {
+		t.Fatal("can't make a new free group (rank 6) smh!")
+	}
 
-	tests := []struct{
-		name string
-		w Word
+	tests := []struct {
+		name    string
+		w       Word
 		wantErr bool
 	}{
 		{
-			name: "valid word",
-			w: Word{{0,6},{1,3},{2,4},{3,12},{4,17},{5,78}},
+			name:    "valid word",
+			w:       Word{{0, 6}, {1, 3}, {2, 4}, {3, 12}, {4, 17}, {5, 78}},
 			wantErr: false,
 		},
-		{ 
-			name: "invalid word",
-			w: Word{{0,6},{1,3},{2,4},{3,12},{4,17},{5,78},{6,1}},
+		{
+			name:    "invalid word",
+			w:       Word{{0, 6}, {1, 3}, {2, 4}, {3, 12}, {4, 17}, {5, 78}, {6, 1}},
 			wantErr: true,
 		},
 	}
@@ -40,28 +43,30 @@ func TestIsValidWord(t *testing.T) {
 
 //the following double up as a test for the Group[T any] interface
 
-//testing equality method
-func TestEqual(t *testing.T){
-	type Word = p.Word
+// testing equality method
+func TestEqual(t *testing.T) {
+	type Word = p.WordSlice
 	G, err := p.NewFreeGroup(7)
-	if err != nil { t.Fatal("can't make a new free group (rank 7) smh!") } 
+	if err != nil {
+		t.Fatal("can't make a new free group (rank 7) smh!")
+	}
 
-	tests := []struct{
+	tests := []struct {
 		name string
-		v Word
-		w Word
+		v    Word
+		w    Word
 		want bool
 	}{
 		{
 			name: "equal",
-			v: Word{{6,3},{4,-2},{3,-6},{0,1},{1,-1}},
-			w: Word{{6,3},{4,-2},{3,-6},{0,1},{1,-1}},
+			v:    Word{{6, 3}, {4, -2}, {3, -6}, {0, 1}, {1, -1}},
+			w:    Word{{6, 3}, {4, -2}, {3, -6}, {0, 1}, {1, -1}},
 			want: true,
 		},
 		{
 			name: "different exponent",
-			v: Word{{6,3},{4,-2},{3,-6},{0,1},{1,-1}},
-			w: Word{{6,3},{4,-2},{3,-5},{0,1},{1,-1}},
+			v:    Word{{6, 3}, {4, -2}, {3, -6}, {0, 1}, {1, -1}},
+			w:    Word{{6, 3}, {4, -2}, {3, -5}, {0, 1}, {1, -1}},
 			want: false,
 		},
 	}
@@ -76,42 +81,44 @@ func TestEqual(t *testing.T){
 	}
 }
 
-//testing the operations
+// testing the operations
 func TestMu(t *testing.T) {
 	G, err := p.NewFreeGroup(8)
-	if err != nil { t.Fatal("can't make a new free group (rank 8) smh!") }
+	if err != nil {
+		t.Fatal("can't make a new free group (rank 8) smh!")
+	}
 
-	type Word = p.Word
-	tests := []struct{
+	type Word = p.WordSlice
+	tests := []struct {
 		name string
-		v Word 
-		w Word
-		vw Word
+		v    Word
+		w    Word
+		vw   Word
 	}{
 		{
 			name: "no reduction",
-			v: Word{{1,2},{3,4}},
-			w: Word{{5,6},{7,8}},
-			vw: Word{{1,2},{3,4},{5,6},{7,8}},
+			v:    Word{{1, 2}, {3, 4}},
+			w:    Word{{5, 6}, {7, 8}},
+			vw:   Word{{1, 2}, {3, 4}, {5, 6}, {7, 8}},
 		},
 		{
 			name: "some reduction",
-			v: Word{{1,2},{3,4}},
-			w: Word{{3,-2},{5,6}},
-			vw: Word{{1,2},{3,2},{5,6}},
+			v:    Word{{1, 2}, {3, 4}},
+			w:    Word{{3, -2}, {5, 6}},
+			vw:   Word{{1, 2}, {3, 2}, {5, 6}},
 		},
 		{
 			name: "complete reduction",
-			v: Word{{1,2},{3,4}},
-			w: Word{{3,-4},{1,-2}},
-			vw: Word{},
+			v:    Word{{1, 2}, {3, 4}},
+			w:    Word{{3, -4}, {1, -2}},
+			vw:   Word{},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := G.Mu(tt.v, tt.w)
 			if !G.Equal(tt.vw, got) {
-				t.Fatalf("G.Mu(%v, %v) = %v want %v", tt.v,tt.w,got,tt.vw)
+				t.Fatalf("G.Mu(%v, %v) = %v want %v", tt.v, tt.w, got, tt.vw)
 			}
 
 		})

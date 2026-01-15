@@ -1,14 +1,14 @@
 package presentation
 
-func NewFreeGroup(rank int) (GroupPresentation, error){
+func NewFreeGroup(rank int) (GroupPresentation, error) {
 	if rank < 0 {
 		return GroupPresentation{}, ErrInvalidNumGenerators
 	}
 	G := GroupPresentation{
-		gen: rank, 
-		rel: make([]Word, 0),
+		gen:     rank,
+		rel:     make([]WordSlice, 0),
 		classes: make(map[Class]bool),
-		}
+	}
 	switch rank {
 	case 0:
 		G.addClasses(trivialGroupClasses)

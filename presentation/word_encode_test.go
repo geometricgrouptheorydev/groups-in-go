@@ -2,19 +2,19 @@ package presentation_test
 
 import (
 	"testing"
+
 	p "github.com/geometricgrouptheorydev/groups-in-go/presentation"
 )
 
-
 func TestWordID(t *testing.T) {
-	tests := []struct{
+	tests := []struct {
 		name string
 		word [][2]int
 		want string
 	}{
 		{
 			name: "some word",
-			word: [][2]int{{0,2},{1,-3},{3,4}},
+			word: [][2]int{{0, 2}, {1, -3}, {3, 4}},
 			want: "0:2,1:-3,3:4",
 		},
 		{
@@ -35,34 +35,34 @@ func TestWordID(t *testing.T) {
 }
 
 func TestParseWordID(t *testing.T) {
-	tests := []struct{
-		name string
-		wordID string
-		want p.Word
+	tests := []struct {
+		name    string
+		wordID  string
+		want    p.WordSlice
 		wantErr bool
 	}{
 		{
-			name: "some word",
-			want: [][2]int{{0,2},{1,-3},{3,4}},
-			wordID: "0:2,1:-3,3:4",
+			name:    "some word",
+			want:    [][2]int{{0, 2}, {1, -3}, {3, 4}},
+			wordID:  "0:2,1:-3,3:4",
 			wantErr: false,
 		},
 		{
-			name: "empty word",
-			want: make([][2]int, 0),
-			wordID: "",
+			name:    "empty word",
+			want:    make([][2]int, 0),
+			wordID:  "",
 			wantErr: false,
 		},
 		{
-			name: "invalid word 1",
-			want: nil,
-			wordID: "abcdefg,sde",
+			name:    "invalid word 1",
+			want:    nil,
+			wordID:  "abcdefg,sde",
 			wantErr: true,
 		},
 		{
-			name: "invalid word 2",
-			want: nil,
-			wordID: "1:2,a:3",
+			name:    "invalid word 2",
+			want:    nil,
+			wordID:  "1:2,a:3",
 			wantErr: true,
 		},
 	}
