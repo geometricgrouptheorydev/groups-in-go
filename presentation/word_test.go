@@ -6,43 +6,43 @@ import (
 	"github.com/geometricgrouptheorydev/groups-in-go/presentation"
 )
 
-func TestEqualWord(t *testing.T) {
-	type Word = presentation.WordSlice
+type WordSlice = presentation.WordSlice
 
+func TestEqualWord(t *testing.T) {
 	tests := []struct {
 		name   string
-		first  Word
-		second Word
+		first  WordSlice
+		second WordSlice
 		want   bool
 	}{
 		{
 			name:   "unequal lengths",
-			first:  Word{{0, 1}, {4, 3}},
-			second: Word{{0, 1}, {4, 3}, {6, 7}},
+			first:  WordSlice{{0, 1}, {4, 3}},
+			second: WordSlice{{0, 1}, {4, 3}, {6, 7}},
 			want:   false,
 		},
 		{
 			name:   "different exponent",
-			first:  Word{{0, 1}, {4, 3}, {6, 7}},
-			second: Word{{0, 1}, {4, 3}, {6, 8}},
+			first:  WordSlice{{0, 1}, {4, 3}, {6, 7}},
+			second: WordSlice{{0, 1}, {4, 3}, {6, 8}},
 			want:   false,
 		},
 		{
 			name:   "swapped",
-			first:  Word{{0, 1}, {1, 2}},
-			second: Word{{1, -2}, {0, -1}},
+			first:  WordSlice{{0, 1}, {1, 2}},
+			second: WordSlice{{1, -2}, {0, -1}},
 			want:   false,
 		},
 		{
 			name:   "different generators",
-			first:  Word{{0, 1}, {1, 2}},
-			second: Word{{0, 1}, {2, 2}},
+			first:  WordSlice{{0, 1}, {1, 2}},
+			second: WordSlice{{0, 1}, {2, 2}},
 			want:   false,
 		},
 		{
 			name:   "actually the same",
-			first:  Word{{0, 1}, {1, 2}, {3, -4}, {4, -2}, {3, 5}},
-			second: Word{{0, 1}, {1, 2}, {3, -4}, {4, -2}, {3, 5}},
+			first:  WordSlice{{0, 1}, {1, 2}, {3, -4}, {4, -2}, {3, 5}},
+			second: WordSlice{{0, 1}, {1, 2}, {3, -4}, {4, -2}, {3, 5}},
 			want:   true,
 		},
 	}
@@ -58,32 +58,30 @@ func TestEqualWord(t *testing.T) {
 }
 
 func TestInverse(t *testing.T) {
-	type Word = presentation.WordSlice
-
 	tests := []struct {
 		name string
-		in   Word
-		want Word
+		in   WordSlice
+		want WordSlice
 	}{
 		{
 			name: "empty",
-			in:   Word{},
-			want: Word{},
+			in:   WordSlice{},
+			want: WordSlice{},
 		},
 		{
 			name: "single letter",
-			in:   Word{{0, 1}},
-			want: Word{{0, -1}},
+			in:   WordSlice{{0, 1}},
+			want: WordSlice{{0, -1}},
 		},
 		{
 			name: "two letters",
-			in:   Word{{0, 1}, {1, 2}},
-			want: Word{{1, -2}, {0, -1}},
+			in:   WordSlice{{0, 1}, {1, 2}},
+			want: WordSlice{{1, -2}, {0, -1}},
 		},
 		{
 			name: "five letters",
-			in:   Word{{0, 1}, {1, 2}, {3, -4}, {4, -2}, {3, 5}},
-			want: Word{{3, -5}, {4, 2}, {3, 4}, {1, -2}, {0, -1}},
+			in:   WordSlice{{0, 1}, {1, 2}, {3, -4}, {4, -2}, {3, 5}},
+			want: WordSlice{{3, -5}, {4, 2}, {3, 4}, {1, -2}, {0, -1}},
 		},
 	}
 
@@ -98,27 +96,25 @@ func TestInverse(t *testing.T) {
 }
 
 func TestReduce(t *testing.T) {
-	type Word = presentation.WordSlice
-
 	tests := []struct {
 		name string
-		in   Word
-		want Word
+		in   WordSlice
+		want WordSlice
 	}{
 		{
 			name: "no reduction",
-			in:   Word{{1, 2}, {3, 4}, {5, 6}},
-			want: Word{{1, 2}, {3, 4}, {5, 6}},
+			in:   WordSlice{{1, 2}, {3, 4}, {5, 6}},
+			want: WordSlice{{1, 2}, {3, 4}, {5, 6}},
 		},
 		{
 			name: "yes reduction",
-			in:   Word{{1, 2}, {1, -2}, {3, 5}, {3, 6}, {2, 1}, {2, -4}, {2, 2}},
-			want: Word{{3, 11}, {2, -1}},
+			in:   WordSlice{{1, 2}, {1, -2}, {3, 5}, {3, 6}, {2, 1}, {2, -4}, {2, 2}},
+			want: WordSlice{{3, 11}, {2, -1}},
 		},
 		{
 			name: "complete cancellation",
-			in:   Word{{0, 7}, {3, 4}, {2, -4}, {2, 4}, {9, -6}, {9, 6}, {3, -4}, {0, -7}},
-			want: presentation.EmptyWord(),
+			in:   WordSlice{{0, 7}, {3, 4}, {2, -4}, {2, 4}, {9, -6}, {9, 6}, {3, -4}, {0, -7}},
+			want: presentation.EmptyWordSlice(),
 		},
 	}
 
@@ -133,24 +129,22 @@ func TestReduce(t *testing.T) {
 }
 
 func TestIsSubword(t *testing.T) {
-	type Word = presentation.WordSlice
-
 	tests := []struct {
 		name  string
-		whole Word
-		sub   Word
+		whole WordSlice
+		sub   WordSlice
 		want  bool
 	}{
 		{
 			name:  "subword",
-			whole: Word{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
-			sub:   Word{{6, -7}, {3, 1}},
+			whole: WordSlice{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
+			sub:   WordSlice{{6, -7}, {3, 1}},
 			want:  true,
 		},
 		{
 			name:  "not subword",
-			whole: Word{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
-			sub:   Word{{6, -7}, {2, -3}},
+			whole: WordSlice{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
+			sub:   WordSlice{{6, -7}, {2, -3}},
 			want:  false,
 		},
 	}
@@ -166,42 +160,40 @@ func TestIsSubword(t *testing.T) {
 }
 
 func TestShortLex(t *testing.T) {
-	type Word = presentation.WordSlice
-
 	tests := []struct {
 		name    string
-		smaller Word
-		bigger  Word
+		smaller WordSlice
+		bigger  WordSlice
 		want    bool
 	}{
 		{
 			name:    "unequal length words true",
-			bigger:  Word{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
-			smaller: Word{{6, -7}, {3, 1}},
+			bigger:  WordSlice{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
+			smaller: WordSlice{{6, -7}, {3, 1}},
 			want:    true,
 		},
 		{
 			name:    "equal length words true",
-			smaller: Word{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
-			bigger:  Word{{6, -2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
+			smaller: WordSlice{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
+			bigger:  WordSlice{{6, -2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
 			want:    true,
 		},
 		{
 			name:    "unequal length words false",
-			bigger:  Word{{1, 2}, {2, -3}, {6, -7}},
-			smaller: Word{{5, -8}, {3, 1}, {4, 3}, {17, 8}},
+			bigger:  WordSlice{{1, 2}, {2, -3}, {6, -7}},
+			smaller: WordSlice{{5, -8}, {3, 1}, {4, 3}, {17, 8}},
 			want:    false,
 		},
 		{
 			name:    "same words",
-			bigger:  Word{{1, 2}, {2, -3}, {6, -7}},
-			smaller: Word{{1, 2}, {2, -3}, {6, -7}},
+			bigger:  WordSlice{{1, 2}, {2, -3}, {6, -7}},
+			smaller: WordSlice{{1, 2}, {2, -3}, {6, -7}},
 			want:    false,
 		},
 		{
 			name:    "equal length words false",
-			bigger:  Word{{5, -8}, {3, 1}, {4, 3}, {17, 8}},
-			smaller: Word{{5, -8}, {3, 1}, {4, 3}, {17, 9}},
+			bigger:  WordSlice{{5, -8}, {3, 1}, {4, 3}, {17, 8}},
+			smaller: WordSlice{{5, -8}, {3, 1}, {4, 3}, {17, 9}},
 		},
 	}
 

@@ -76,7 +76,7 @@ func (G GroupPresentation) IsValidWord(w WordSlice) error {
 type Group[T any] = groups.Group[T]
 
 func (G GroupPresentation) Mu(v WordSlice, w WordSlice) WordSlice {
-	return ReduceWordSlice(Concat(v, w))
+	return ReduceWordSlice(ConcatWordSlice(v, w))
 }
 
 func (G GroupPresentation) Inv(v WordSlice) WordSlice {

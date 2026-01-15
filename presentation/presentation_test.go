@@ -8,16 +8,15 @@ import (
 
 //testing word validity checker
 
-type Word = p.WordSlice
 type GroupPresentation = p.GroupPresentation
 
 func TestNewGroupPresentation(t *testing.T) {
 	tests := []struct {
 		name        string
 		gen         int
-		rel         []Word
+		rel         []WordSlice
 		wantErr     bool
-		wantRel     []Word
+		wantRel     []WordSlice
 		wantClasses map[p.Class]bool
 	}{}
 
