@@ -15,16 +15,6 @@ const (
 	Finite Class = "finite"
 )
 
-var supportedClasses = map[Class]struct{}{
-	Trivial: {},
-	Free: {},
-	FreeAbelian: {},
-	OneRelator: {},
-	Abelian: {},
-	Cyclic: {},
-	Finite: {},
-}
-
 //helper to copy class maps definied here without mutating them. 
 //fallback to reset group classes upon error to be added
 func (G *GroupPresentation) addClasses(newClasses map[Class]bool) error {

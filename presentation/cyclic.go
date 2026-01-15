@@ -38,8 +38,9 @@ func (G *GroupPresentation) SimplifyCyclicPresentation() error {
 	exps := make([]int, 0, len(G.rel)) //we'll extract the exponent of each relation
 	//each relation is already in the form Word{{0,n}} due to the word reduction in NewGroupPresentation
 	for _, r := range G.rel {
-		exps = append(exps, r[0][1])
+		exps = append(exps, r.word[0][1])
 	}
-	G.rel = []WordSlice{{{0, MultiGCD(exps)}}}
+	combinedRel := NewWord(WordSlice{{0, MultiGCD(exps)}})
+	G.rel[combinedRel.id] = combinedRel
 	return nil
 }

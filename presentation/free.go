@@ -6,7 +6,7 @@ func NewFreeGroup(rank int) (GroupPresentation, error) {
 	}
 	G := GroupPresentation{
 		gen:     rank,
-		rel:     make([]WordSlice, 0),
+		rel:     make(map[string]Word),
 		classes: make(map[Class]bool),
 	}
 	switch rank {

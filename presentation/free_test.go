@@ -6,9 +6,10 @@ import (
 	p "github.com/geometricgrouptheorydev/groups-in-go/presentation"
 )
 
+type Word = p.Word
+
 // testing IsValidWord
 func TestIsValidWord(t *testing.T) {
-	type Word = p.WordSlice
 	G, err := p.NewFreeGroup(6)
 	if err != nil {
 		t.Fatal("can't make a new free group (rank 6) smh!")
@@ -21,12 +22,12 @@ func TestIsValidWord(t *testing.T) {
 	}{
 		{
 			name:    "valid word",
-			w:       Word{{0, 6}, {1, 3}, {2, 4}, {3, 12}, {4, 17}, {5, 78}},
+			w:       p.NewWord(WordSlice{{0, 6}, {1, 3}, {2, 4}, {3, 12}, {4, 17}, {5, 78}}),
 			wantErr: false,
 		},
 		{
 			name:    "invalid word",
-			w:       Word{{0, 6}, {1, 3}, {2, 4}, {3, 12}, {4, 17}, {5, 78}, {6, 1}},
+			w:       p.NewWord(WordSlice{{0, 6}, {1, 3}, {2, 4}, {3, 12}, {4, 17}, {5, 78}, {6, 1}}),
 			wantErr: true,
 		},
 	}
@@ -45,7 +46,6 @@ func TestIsValidWord(t *testing.T) {
 
 // testing equality method
 func TestEqual(t *testing.T) {
-	type Word = p.WordSlice
 	G, err := p.NewFreeGroup(7)
 	if err != nil {
 		t.Fatal("can't make a new free group (rank 7) smh!")
@@ -59,14 +59,14 @@ func TestEqual(t *testing.T) {
 	}{
 		{
 			name: "equal",
-			v:    Word{{6, 3}, {4, -2}, {3, -6}, {0, 1}, {1, -1}},
-			w:    Word{{6, 3}, {4, -2}, {3, -6}, {0, 1}, {1, -1}},
+			v:    p.NewWord(WordSlice{{6, 3}, {4, -2}, {3, -6}, {0, 1}, {1, -1}}),
+			w:    p.NewWord(WordSlice{{6, 3}, {4, -2}, {3, -6}, {0, 1}, {1, -1}}),
 			want: true,
 		},
 		{
 			name: "different exponent",
-			v:    Word{{6, 3}, {4, -2}, {3, -6}, {0, 1}, {1, -1}},
-			w:    Word{{6, 3}, {4, -2}, {3, -5}, {0, 1}, {1, -1}},
+			v:    p.NewWord(WordSlice{{6, 3}, {4, -2}, {3, -6}, {0, 1}, {1, -1}}),
+			w:    p.NewWord(WordSlice{{6, 3}, {4, -2}, {3, -5}, {0, 1}, {1, -1}}),
 			want: false,
 		},
 	}
@@ -88,7 +88,6 @@ func TestMu(t *testing.T) {
 		t.Fatal("can't make a new free group (rank 8) smh!")
 	}
 
-	type Word = p.WordSlice
 	tests := []struct {
 		name string
 		v    Word
@@ -97,21 +96,21 @@ func TestMu(t *testing.T) {
 	}{
 		{
 			name: "no reduction",
-			v:    Word{{1, 2}, {3, 4}},
-			w:    Word{{5, 6}, {7, 8}},
-			vw:   Word{{1, 2}, {3, 4}, {5, 6}, {7, 8}},
+			v:    p.NewWord(WordSlice{{1, 2}, {3, 4}}),
+			w:    p.NewWord(WordSlice{{5, 6}, {7, 8}}),
+			vw:   p.NewWord(WordSlice{{1, 2}, {3, 4}, {5, 6}, {7, 8}}),
 		},
 		{
 			name: "some reduction",
-			v:    Word{{1, 2}, {3, 4}},
-			w:    Word{{3, -2}, {5, 6}},
-			vw:   Word{{1, 2}, {3, 2}, {5, 6}},
+			v:    p.NewWord(WordSlice{{1, 2}, {3, 4}}),
+			w:    p.NewWord(WordSlice{{3, -2}, {5, 6}}),
+			vw:   p.NewWord(WordSlice{{1, 2}, {3, 2}, {5, 6}}),
 		},
 		{
 			name: "complete reduction",
-			v:    Word{{1, 2}, {3, 4}},
-			w:    Word{{3, -4}, {1, -2}},
-			vw:   Word{},
+			v:    p.NewWord(WordSlice{{1, 2}, {3, 4}}),
+			w:    p.NewWord(WordSlice{{3, -4}, {1, -2}}),
+			vw:   p.EmptyWord(),
 		},
 	}
 	for _, tt := range tests {

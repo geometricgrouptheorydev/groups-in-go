@@ -14,9 +14,9 @@ func TestNewGroupPresentation(t *testing.T) {
 	tests := []struct {
 		name        string
 		gen         int
-		rel         []WordSlice
+		rel         []Word
 		wantErr     bool
-		wantRel     []WordSlice
+		wantRel     map[string]Word
 		wantClasses map[p.Class]bool
 	}{}
 
@@ -25,11 +25,6 @@ func TestNewGroupPresentation(t *testing.T) {
 			_, err := p.NewGroupPresentation(tt.gen, tt.rel)
 			if (err != nil) != tt.wantErr {
 				t.Fatalf("wanted error %v got error %v", tt.wantErr, err)
-			}
-			for i := range tt.rel {
-				if !p.EqualWordSlice(tt.rel[i], tt.wantRel[i]) {
-					break
-				}
 			}
 		})
 	}

@@ -4,7 +4,7 @@ package presentation
 // WARNING: false returns do not automatically mean that the group is not abelian/free abelian
 // This check is not in initAddProperties because of its time complexity of O(n^2m) which will make it slower for larger presentations
 // This method also updates G's classes accordingly via addClasses, returning an error if there is one
-func (G GroupPresentation) CheckCommutativityRelators() (bool, bool, error) {
+func (G *GroupPresentation) CheckCommutativityRelators() (bool, bool, error) {
 	//we check if these properties are already recorded so not to waste time (this is O(1))
 	val, ok := G.classes[FreeAbelian]
 	if val && ok {
@@ -40,10 +40,10 @@ func (G GroupPresentation) CheckCommutativityRelators() (bool, bool, error) {
 			target1 := WordSlice{{i, 1}, {j, 1}, {i, -1}, {j, -1}}
 			target2 := WordSlice{{i, -1}, {j, -1}, {i, 1}, {j, 1}}
 			for _, r := range G.rel {
-				if len(r) != 4 {
+				if len(r.word) != 4 {
 					onlyCommutativityRelators = false //r is not a commutativity relator for sure
 					continue
-				} else if EqualWordSlice(r, target1) || EqualWordSlice(r, target2) {
+				} else if EqualWordSlice(r.word, target1) || EqualWordSlice(r.word, target2) {
 					found = true
 					foundCount++
 					break
@@ -87,12 +87,13 @@ func NewFreeAbelianGroup(rank int) (GroupPresentation, error) {
 
 	G := GroupPresentation{
 		gen:     rank,
-		rel:     make([]WordSlice, rank-1), //we add the relators in a double loop below
+		rel:     make(map[string]Word), //we add the relators in a double loop below
 		classes: classes,
 	}
 	for i := range rank {
 		for j := range i {
-			G.rel = append(G.rel, WordSlice{{i, -1}, {j, -1}, {i, 1}, {j, 1}})
+			r := NewWord(WordSlice{{i, -1}, {j, -1}, {i, 1}, {j, 1}})
+			G.rel[r.id] = r
 		}
 	}
 	return G, nil

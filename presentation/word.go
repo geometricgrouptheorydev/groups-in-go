@@ -8,26 +8,26 @@ type WordSlice [][2]int
 // This struct is treated as immutable
 // Word.id permits set-like behavior in word presentations
 type Word struct {
-	slice WordSlice
+	word WordSlice
 	id   string //is always equal to WordID(Word.slice)
 }
 
-//Constructor for a new Word based on a WordSlice
-//Most functions on Words call NewWord on the output of its corresponding WordSlice version of the function
+// Constructor for a new Word based on a WordSlice
+// Most functions on Words call NewWord on the output of its corresponding WordSlice version of the function
 func NewWord(w WordSlice) Word {
 	return Word{
-		slice: w,
-		id: WordID(w),
+		word: w,
+		id:   WordID(w),
 	}
 }
 
 func EmptyWordSlice() WordSlice { return WordSlice{} }
-func EmptyWord() Word {return NewWord(EmptyWordSlice())}
+func EmptyWord() Word           { return NewWord(EmptyWordSlice()) }
 
 func ConcatWordSlice(a, b WordSlice) WordSlice { return append(append(WordSlice{}, a...), b...) } //double appends for immutability
-func ConcatWord(v, w Word) Word { return NewWord(ConcatWordSlice(v.slice, w.slice)) }
+func ConcatWord(v, w Word) Word                { return NewWord(ConcatWordSlice(v.word, w.word)) }
 
-// checks if two WordSlices are equal 
+// checks if two WordSlices are equal
 func EqualWordSlice(u, v WordSlice) bool {
 	if len(u) != len(v) {
 		return false
@@ -40,12 +40,12 @@ func EqualWordSlice(u, v WordSlice) bool {
 	return true
 }
 
-//checks if two Words are equal by comparing their unique IDs
+// checks if two Words are equal by comparing their unique IDs
 func EqualWord(u, v Word) bool {
 	return u.id == v.id
 }
 
-//invert a WordSlice
+// invert a WordSlice
 func InvWordSlice(w WordSlice) WordSlice {
 	n := len(w)
 	v := WordSlice{}
@@ -55,12 +55,12 @@ func InvWordSlice(w WordSlice) WordSlice {
 	return v
 }
 
-//invert a Word
+// invert a Word
 func InvWord(w Word) Word {
-	return NewWord(InvWordSlice(w.slice))
+	return NewWord(InvWordSlice(w.word))
 }
 
-//Free reduction of a WordSlice
+// Free reduction of a WordSlice
 func ReduceWordSlice(w WordSlice) WordSlice {
 	r := make(WordSlice, 0, len(w)) //r stands for reversed
 	for _, s := range w {
@@ -80,7 +80,7 @@ func ReduceWordSlice(w WordSlice) WordSlice {
 }
 
 func ReduceWord(w Word) Word {
-	return NewWord(ReduceWordSlice(w.slice))
+	return NewWord(ReduceWordSlice(w.word))
 }
 
 // checks if self is a subword of other
@@ -99,10 +99,10 @@ func IsSubWordSlice(self, other WordSlice) bool {
 }
 
 func IsSubWord(self, other Word) bool {
-	return IsSubWordSlice(self.slice, other.slice) 
+	return IsSubWordSlice(self.word, other.word)
 }
 
-//ShortLexWordSlice reports whether a < b in shortlex order.
+// ShortLexWordSlice reports whether a < b in shortlex order.
 func ShortLexWordSlice(a, b WordSlice) bool {
 	if len(a) != len(b) {
 		return len(a) < len(b)
@@ -120,10 +120,10 @@ func ShortLexWordSlice(a, b WordSlice) bool {
 }
 
 func ShortLexWord(a, b Word) bool {
-	return ShortLexWordSlice(a.slice, b.slice)
+	return ShortLexWordSlice(a.word, b.word)
 }
 
-//find highest generator index in a Word w
+// find highest generator index in a Word w
 func MaxGenWordSlice(w WordSlice) int {
 	gens := 0
 	for _, u := range w {
@@ -135,7 +135,7 @@ func MaxGenWordSlice(w WordSlice) int {
 }
 
 func MaxGenWord(w Word) int {
-	return MaxGenWordSlice(w.slice)
+	return MaxGenWordSlice(w.word)
 }
 
 // reduction to shortlex order that ignores commutativty used for abelian groups only
@@ -156,7 +156,7 @@ func abelianReduceWordSlice(w WordSlice, gens int) WordSlice {
 }
 
 func abelianReduceWord(w Word, gens int) Word {
-	return NewWord(abelianReduceWordSlice(w.slice, gens))
+	return NewWord(abelianReduceWordSlice(w.word, gens))
 }
 
 // abelianReduce but safe
@@ -166,5 +166,5 @@ func AbelianReduceWordSlice(w WordSlice) WordSlice {
 }
 
 func AbelianReduceWord(w Word) Word {
-	return NewWord(AbelianReduceWordSlice(w.slice))
+	return NewWord(AbelianReduceWordSlice(w.word))
 }
