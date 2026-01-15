@@ -41,6 +41,6 @@ func (G *GroupPresentation) SimplifyCyclicPresentation() error {
 		exps = append(exps, r.word[0][1])
 	}
 	combinedRel := NewWord(WordSlice{{0, MultiGCD(exps)}})
-	G.rel[combinedRel.id] = combinedRel
+	G.rel.Add(combinedRel)
 	return nil
 }

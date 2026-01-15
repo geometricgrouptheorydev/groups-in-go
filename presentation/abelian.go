@@ -73,10 +73,10 @@ func (G *GroupPresentation) CheckCommutativityRelators() (bool, bool, error) {
 }
 
 // creating a new free abelian group
-func NewFreeAbelianGroup(rank int) (GroupPresentation, error) {
+func NewFreeAbelianGroup(rank int) (*GroupPresentation, error) {
 	classes := freeAbelianGroupMultipleGeneratorClasses //we'll change this if needed below
 	if rank < 0 {
-		return GroupPresentation{}, ErrInvalidNumGenerators
+		return nil, ErrInvalidNumGenerators
 	} else if rank == 0 {
 		return NewFreeGroup(0) //return trivial group
 	} else if rank == 1 {
@@ -85,15 +85,15 @@ func NewFreeAbelianGroup(rank int) (GroupPresentation, error) {
 		classes = freeAbelianGroup2GeneratorClasses
 	}
 
-	G := GroupPresentation{
+	G := &GroupPresentation{
 		gen:     rank,
-		rel:     make(map[string]Word), //we add the relators in a double loop below
+		rel:     make(WordSet), //we add the relators in a double loop below
 		classes: classes,
 	}
 	for i := range rank {
 		for j := range i {
 			r := NewWord(WordSlice{{i, -1}, {j, -1}, {i, 1}, {j, 1}})
-			G.rel[r.id] = r
+			G.rel.Add(r)
 		}
 	}
 	return G, nil

@@ -1,10 +1,10 @@
 package presentation
 
-func NewFreeGroup(rank int) (GroupPresentation, error) {
+func NewFreeGroup(rank int) (*GroupPresentation, error) {
 	if rank < 0 {
-		return GroupPresentation{}, ErrInvalidNumGenerators
+		return nil, ErrInvalidNumGenerators
 	}
-	G := GroupPresentation{
+	G := &GroupPresentation{
 		gen:     rank,
 		rel:     make(map[string]Word),
 		classes: make(map[Class]bool),

@@ -29,7 +29,7 @@ func (G *GroupPresentation) Reduce(w Word) (Word, error) {
 			}
 		}
 	}
-	return EmptyWord(), nil
+	return ReduceWord(w), nil //temporary
 }
 
 // O(n)
