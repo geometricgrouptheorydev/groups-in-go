@@ -14,7 +14,7 @@ type Word struct {
 
 // Constructor for a new Word based on a WordSlice
 // Most functions on Words call NewWord on the output of its corresponding WordSlice version of the function
-func NewWord(w WordSlice) Word {
+func NewWord(w [][2]int) Word {
 	return Word{
 		word: w,
 		id:   WordID(w),
@@ -23,6 +23,8 @@ func NewWord(w WordSlice) Word {
 
 func EmptyWordSlice() WordSlice { return WordSlice{} }
 func EmptyWord() Word           { return NewWord(EmptyWordSlice()) }
+
+func Len(w Word) int { return len(w.word) } //length of the word
 
 func ConcatWordSlice(a, b WordSlice) WordSlice { return append(append(WordSlice{}, a...), b...) } //double appends for immutability
 func ConcatWord(v, w Word) Word                { return NewWord(ConcatWordSlice(v.word, w.word)) }

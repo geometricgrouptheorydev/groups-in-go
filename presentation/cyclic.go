@@ -42,5 +42,6 @@ func (G *GroupPresentation) SimplifyCyclicPresentation() error {
 	}
 	combinedRel := NewWord(WordSlice{{0, MultiGCD(exps)}})
 	G.rel.Add(combinedRel)
+	G.addClasses(oneRelatorGroupClasses)
 	return nil
 }

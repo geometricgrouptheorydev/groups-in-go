@@ -22,8 +22,23 @@ func TrivialPresentation() GroupPresentation {
 	return GroupPresentation{classes: trivialGroupClasses}
 }
 
+//returns (a copy of) the relations of G
+func (G *GroupPresentation) Relations() WordSet {
+	return copyMap(G.rel)
+}
+
+//returns the number of generators of G
+func (G *GroupPresentation) NumGenerators() int {
+	return G.gen
+}
+
+//returns (a copy of) the classes of G
+func (G *GroupPresentation) Classes() map[Class]bool {
+	return copyMap(G.classes)
+}
+
 // Arguments: number of generators and the relations. Invalid presentations return an error.
-func NewGroupPresentation(generators int, relations []Word) (*GroupPresentation, error) {
+func NewGroupPresentation(generators int, relations WordSet) (*GroupPresentation, error) {
 	if generators < 0 {
 		return nil, ErrInvalidNumGenerators
 	} else if len(relations) == 0 {
@@ -36,7 +51,8 @@ func NewGroupPresentation(generators int, relations []Word) (*GroupPresentation,
 				return nil, ErrInvalidRelation
 			}
 		}
-		reducedRelations.Add(r)
+		reduced := ReduceWord(r) //we will not add it to the relations set if empty
+		if Len(reduced) > 0 { reducedRelations.Add(ReduceWord(r)) }
 	}
 	return initAddProperties(&GroupPresentation{gen: generators, rel: reducedRelations, classes: make(map[Class]bool)})
 }
@@ -92,5 +108,5 @@ func (G *GroupPresentation) Id() Word {
 
 // WARNING: if the word problem is not solvable for your particular presentation, false does not guarantee inequality
 func (G *GroupPresentation) Equal(v Word, w Word) bool {
-	return len(G.Mu(v, G.Inv(w)).word) == 0 //checks if vw^-1 is the empty word
+	return Len(G.Mu(v, G.Inv(w))) == 0 //checks if vw^-1 is the empty word
 }

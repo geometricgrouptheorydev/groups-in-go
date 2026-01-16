@@ -55,3 +55,8 @@ func Union(A, B WordSet) WordSet {
 	}
 	return C
 }
+
+//creates a copy of a WordSet
+func (A WordSet) Copy() WordSet {
+	return copyMap(A)
+}
