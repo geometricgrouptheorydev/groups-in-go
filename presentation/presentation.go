@@ -13,26 +13,26 @@ var (
 )
 
 type GroupPresentation struct {
-	gen     int             //generators
-	rel     WordSet //set of relations with key: word.id
-	classes map[Class]bool  //true means the group is in that class, false means it is not, and if a class is not a map key it means we don't know
+	gen     int            //generators
+	rel     WordSet        //set of relations with key: word.id
+	classes map[Class]bool //true means the group is in that class, false means it is not, and if a class is not a map key it means we don't know
 }
 
 func TrivialPresentation() GroupPresentation {
 	return GroupPresentation{classes: trivialGroupClasses}
 }
 
-//returns (a copy of) the relations of G
+// returns (a copy of) the relations of G
 func (G *GroupPresentation) Relations() WordSet {
 	return copyMap(G.rel)
 }
 
-//returns the number of generators of G
+// returns the number of generators of G
 func (G *GroupPresentation) NumGenerators() int {
 	return G.gen
 }
 
-//returns (a copy of) the classes of G
+// returns (a copy of) the classes of G
 func (G *GroupPresentation) Classes() map[Class]bool {
 	return copyMap(G.classes)
 }
@@ -46,13 +46,15 @@ func NewGroupPresentation(generators int, relations WordSet) (*GroupPresentation
 	}
 	reducedRelations := make(WordSet) //we reduce relations provided if possible
 	for _, r := range relations {
-		for _, p := range r.word {
+		for _, p := range r.seq {
 			if p[0] < 0 || p[0] >= generators {
 				return nil, ErrInvalidRelation
 			}
 		}
 		reduced := ReduceWord(r) //we will not add it to the relations set if empty
-		if Len(reduced) > 0 { reducedRelations.Add(ReduceWord(r)) }
+		if Len(reduced) > 0 {
+			reducedRelations.Add(ReduceWord(r))
+		}
 	}
 	return initAddProperties(&GroupPresentation{gen: generators, rel: reducedRelations, classes: make(map[Class]bool)})
 }
@@ -76,7 +78,7 @@ func initAddProperties(G *GroupPresentation) (*GroupPresentation, error) {
 // this will lead to varying behavior for out-of-range generators depending on G.classes
 // the following O(n) function lets you check this automatically at an O(n) cost, useful for long words that are hard to check manually
 func (G *GroupPresentation) IsValidWord(w Word) error {
-	for i, u := range w.word {
+	for i, u := range w.seq {
 		if u[0] >= G.gen || u[0] < 0 {
 			return fmt.Errorf("invalid generator %v at word index %v", u[0], i)
 		}

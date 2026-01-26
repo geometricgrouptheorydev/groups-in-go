@@ -35,20 +35,20 @@ func (G *GroupPresentation) Reduce(w Word) (Word, error) {
 // O(n)
 func (G *GroupPresentation) handleReduceCyclic(w Word) Word {
 	G.SimplifyCyclicPresentation()
-	wordExp := ReduceWordSlice(w.word)[0][1]
+	wordExp := ReduceRawWord(w.seq)[0][1]
 	var rel Word
 	for _, r := range G.rel {
 		rel = r //extracting the only member of G.rel
 		break
 	}
-	relExp := rel.word[0][1]
+	relExp := rel.seq[0][1]
 	newExp := wordExp % relExp
 	if newExp < 0 {
 		newExp = -newExp
 	} else if newExp == 0 {
 		return EmptyWord()
 	}
-	return NewWord(WordSlice{{0, newExp}})
+	return NewWord(RawWord{{0, newExp}})
 }
 
 // O(n)

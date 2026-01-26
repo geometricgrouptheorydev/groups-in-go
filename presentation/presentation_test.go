@@ -50,7 +50,7 @@ func TestNewGroupPresentation(t *testing.T) {
 				},
 		},
 		{
-			name: "one real relator",
+			name: "one non-trivial relator",
 			gen: 4,
 			rel: p.NewWordSet([]p.Word{
 				p.NewWord([][2]int{{0,3},{1,4},{1,-2},{1,-2},{0,-3}}), //this reduces to empty word

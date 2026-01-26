@@ -37,13 +37,13 @@ func (G *GroupPresentation) CheckCommutativityRelators() (bool, bool, error) {
 	for i := range G.gen {
 		for j := range i {
 			found := false
-			target1 := WordSlice{{i, 1}, {j, 1}, {i, -1}, {j, -1}}
-			target2 := WordSlice{{i, -1}, {j, -1}, {i, 1}, {j, 1}}
+			target1 := RawWord{{i, 1}, {j, 1}, {i, -1}, {j, -1}}
+			target2 := RawWord{{i, -1}, {j, -1}, {i, 1}, {j, 1}}
 			for _, r := range G.rel {
-				if len(r.word) != 4 {
+				if len(r.seq) != 4 {
 					onlyCommutativityRelators = false //r is not a commutativity relator for sure
 					continue
-				} else if EqualWordSlice(r.word, target1) || EqualWordSlice(r.word, target2) {
+				} else if EqualRawWord(r.seq, target1) || EqualRawWord(r.seq, target2) {
 					found = true
 					foundCount++
 					break
@@ -92,7 +92,7 @@ func NewFreeAbelianGroup(rank int) (*GroupPresentation, error) {
 	}
 	for i := range rank {
 		for j := range i {
-			r := NewWord(WordSlice{{i, -1}, {j, -1}, {i, 1}, {j, 1}})
+			r := NewWord(RawWord{{i, -1}, {j, -1}, {i, 1}, {j, 1}})
 			G.rel.Add(r)
 		}
 	}

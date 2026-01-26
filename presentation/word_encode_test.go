@@ -38,7 +38,7 @@ func TestParseWordID(t *testing.T) {
 	tests := []struct {
 		name    string
 		wordID  string
-		want    p.WordSlice
+		want    p.RawWord
 		wantErr bool
 	}{
 		{
@@ -73,7 +73,7 @@ func TestParseWordID(t *testing.T) {
 			if (err != nil) != tt.wantErr {
 				t.Fatalf("got error %v but didn't want one", err)
 			}
-			if !p.EqualWordSlice(got, tt.want) {
+			if !p.EqualRawWord(got, tt.want) {
 				t.Fatalf("ParseWordID(%v) = %v want %v", tt.wordID, got, tt.want)
 			}
 		})

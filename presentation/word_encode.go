@@ -21,12 +21,12 @@ func WordID(w [][2]int) string {
 	return b.String()
 }
 
-func ParseWordID(id string) (WordSlice, error) {
+func ParseWordID(id string) (RawWord, error) {
 	if id == "" {
 		return nil, nil // empty word
 	}
 	parts := strings.Split(id, ",")
-	w := make(WordSlice, 0, len(parts))
+	w := make(RawWord, 0, len(parts))
 	for _, part := range parts {
 		sub := strings.Split(part, ":")
 		if len(sub) != 2 {

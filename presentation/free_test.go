@@ -22,12 +22,12 @@ func TestIsValidWord(t *testing.T) {
 	}{
 		{
 			name:    "valid word",
-			w:       p.NewWord(WordSlice{{0, 6}, {1, 3}, {2, 4}, {3, 12}, {4, 17}, {5, 78}}),
+			w:       p.NewWord(RawWord{{0, 6}, {1, 3}, {2, 4}, {3, 12}, {4, 17}, {5, 78}}),
 			wantErr: false,
 		},
 		{
 			name:    "invalid word",
-			w:       p.NewWord(WordSlice{{0, 6}, {1, 3}, {2, 4}, {3, 12}, {4, 17}, {5, 78}, {6, 1}}),
+			w:       p.NewWord(RawWord{{0, 6}, {1, 3}, {2, 4}, {3, 12}, {4, 17}, {5, 78}, {6, 1}}),
 			wantErr: true,
 		},
 	}
@@ -59,14 +59,14 @@ func TestEqual(t *testing.T) {
 	}{
 		{
 			name: "equal",
-			v:    p.NewWord(WordSlice{{6, 3}, {4, -2}, {3, -6}, {0, 1}, {1, -1}}),
-			w:    p.NewWord(WordSlice{{6, 3}, {4, -2}, {3, -6}, {0, 1}, {1, -1}}),
+			v:    p.NewWord(RawWord{{6, 3}, {4, -2}, {3, -6}, {0, 1}, {1, -1}}),
+			w:    p.NewWord(RawWord{{6, 3}, {4, -2}, {3, -6}, {0, 1}, {1, -1}}),
 			want: true,
 		},
 		{
 			name: "different exponent",
-			v:    p.NewWord(WordSlice{{6, 3}, {4, -2}, {3, -6}, {0, 1}, {1, -1}}),
-			w:    p.NewWord(WordSlice{{6, 3}, {4, -2}, {3, -5}, {0, 1}, {1, -1}}),
+			v:    p.NewWord(RawWord{{6, 3}, {4, -2}, {3, -6}, {0, 1}, {1, -1}}),
+			w:    p.NewWord(RawWord{{6, 3}, {4, -2}, {3, -5}, {0, 1}, {1, -1}}),
 			want: false,
 		},
 	}
@@ -96,20 +96,20 @@ func TestMu(t *testing.T) {
 	}{
 		{
 			name: "no reduction",
-			v:    p.NewWord(WordSlice{{1, 2}, {3, 4}}),
-			w:    p.NewWord(WordSlice{{5, 6}, {7, 8}}),
-			vw:   p.NewWord(WordSlice{{1, 2}, {3, 4}, {5, 6}, {7, 8}}),
+			v:    p.NewWord(RawWord{{1, 2}, {3, 4}}),
+			w:    p.NewWord(RawWord{{5, 6}, {7, 8}}),
+			vw:   p.NewWord(RawWord{{1, 2}, {3, 4}, {5, 6}, {7, 8}}),
 		},
 		{
 			name: "some reduction",
-			v:    p.NewWord(WordSlice{{1, 2}, {3, 4}}),
-			w:    p.NewWord(WordSlice{{3, -2}, {5, 6}}),
-			vw:   p.NewWord(WordSlice{{1, 2}, {3, 2}, {5, 6}}),
+			v:    p.NewWord(RawWord{{1, 2}, {3, 4}}),
+			w:    p.NewWord(RawWord{{3, -2}, {5, 6}}),
+			vw:   p.NewWord(RawWord{{1, 2}, {3, 2}, {5, 6}}),
 		},
 		{
 			name: "complete reduction",
-			v:    p.NewWord(WordSlice{{1, 2}, {3, 4}}),
-			w:    p.NewWord(WordSlice{{3, -4}, {1, -2}}),
+			v:    p.NewWord(RawWord{{1, 2}, {3, 4}}),
+			w:    p.NewWord(RawWord{{3, -4}, {1, -2}}),
 			vw:   p.EmptyWord(),
 		},
 	}
