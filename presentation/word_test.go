@@ -128,6 +128,44 @@ func TestReduce(t *testing.T) {
 	}
 }
 
+func TestCyclicReduce(t *testing.T) {
+	tests := []struct {
+		name string
+		in   RawWord
+		want RawWord
+	}{
+		{
+			name: "no reduction",
+			in:   RawWord{{1, 2}, {3, 4}, {5, 6}},
+			want: RawWord{{1, 2}, {3, 4}, {5, 6}},
+		},
+		{
+			name: "non-cyclic reduction",
+			in:   RawWord{{1, 2}, {1, -2}, {3, 5}, {3, 6}, {2, 1}, {2, -4}, {2, 2}},
+			want: RawWord{{3, 11}, {2, -1}},
+		},
+		{
+			name: "simple cyclic reduction",
+			in:   RawWord{{0, 7}, {3, 4}, {2, -4}, {0, -7}},
+			want: RawWord{{3, 4}, {2, -4}},
+		},
+		{
+			name: "bigger cyclic reduction",
+			in:   RawWord{{5, 5}, {4, -2}, {0, 8}, {3, 4}, {2, -4}, {0, -7}, {4, 2}, {5, -5}},
+			want: RawWord{{0, 1}, {3, 4}, {2, -4}},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := presentation.CyclicReduceRawWord(tt.in)
+			if !presentation.EqualRawWord(got, tt.want) {
+				t.Fatalf("Reduce(%v) = %v, want %v", tt.in, got, tt.want)
+			}
+		})
+	}
+}
+
 func TestIsSubword(t *testing.T) {
 	tests := []struct {
 		name  string

@@ -65,7 +65,7 @@ func InvWord(w Word) Word {
 
 // Free reduction of a RawWord
 func ReduceRawWord(w RawWord) RawWord {
-	r := make(RawWord, 0, len(w)) //r stands for reversed
+	r := make(RawWord, 0, len(w)) //r stands for reduced
 	for _, s := range w {
 		if len(r) > 0 && r[len(r)-1][1] == 0 {
 			continue //ignore 0 exponents
@@ -84,6 +84,35 @@ func ReduceRawWord(w RawWord) RawWord {
 
 func ReduceWord(w Word) Word {
 	return NewWord(ReduceRawWord(w.seq))
+}
+
+// Cyclic Reduction
+func CyclicReduceRawWord(w RawWord) RawWord {
+	r := ReduceRawWord(w) //r for reduced
+	lim := len(r)
+	for i := 0; i < lim; i++ {
+		s := r[i]
+		last := r[lim - 1]
+		if s[0] == last[0] { //conjugate by a power of s[0]
+			r[i][1] += last[1]
+			r = r[:len(r) - 1]
+			lim--
+		} else {
+			break //already cyclically reduced
+		}
+	}
+	c := make(RawWord, 0, len(r))
+	for _, s := range r {
+		if s[1] != 0 { //remove 0 exponents
+			c = append(c, s)
+		}
+	}
+	return c
+}
+
+func CyclicReduceWord(w Word) Word {
+	c := CyclicReduceRawWord(w.seq)
+	return NewWord(c)
 }
 
 // checks if self is a subword of other
