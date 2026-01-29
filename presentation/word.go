@@ -46,15 +46,7 @@ func PowRawWord(n int, w RawWord) RawWord {
 
 // checks if two RawWords are equal
 func EqualRawWord(u, v RawWord) bool {
-	if len(u) != len(v) {
-		return false
-	}
-	for i := range u {
-		if u[i][0] != v[i][0] || u[i][1] != v[i][1] {
-			return false
-		}
-	}
-	return true
+	return equalSlices(u, v)
 }
 
 // checks if two Words are equal by comparing their unique IDs
@@ -130,7 +122,7 @@ func CyclicReduceWord(w Word) Word {
 }
 
 // Helper for using KMP algorithms
-// Returns the same word but generally unreduced with all exponents 1 or -1
+// Returns the same word but unreduced with all exponents 1 or -1
 func expandRawWord(w RawWord) RawWord{
 	expSum := 0 // Sum of exponents to determine how much memory we need to allocate
 	for _, u := range w {
@@ -145,7 +137,7 @@ func expandRawWord(w RawWord) RawWord{
 	return expanded
 }
 
-// Checks if self is a subword of other in O(n) time using the KMP prefix function
+// Checks if self is a subword of other in O(n) using the KMP prefix function
 func IsSubRawWord(self, other RawWord) bool {
 	sub := expandRawWord(self)
 	whole := expandRawWord(other)
@@ -223,19 +215,14 @@ func AbelianReduceWord(w Word) Word {
 	return NewWord(AbelianReduceRawWord(w.seq))
 }
 
-//struct to hols the roots of a RawWord
-type RawWordRoot struct {
-	root RawWord
-	repetitions int
+//checks if w is the power of another subword
+func CheckIfPowerRawWord(w RawWord) bool {
+	// If w has a root, so does its cyclic reduction
+	// For a cyclically reduced word, every root is a prefix of it
+	c := expandRawWord(CyclicReduceRawWord(w))
+	return KMPCheckRepeats(c)
 }
 
-// for a RawWord w, finds its roots (i.e. pairs v RawWord n int such that v^n = w)
-func FindRootsRawWord(w RawWord) []RawWordRoot {
-	roots := make([]RawWordRoot, 0)
-	for d := 1; d * d < len(w); d++ {
-		if len(w) % d == 0 {
-			break
-		}
-	}
-	return roots
+func CheckIfPowerWord(w Word) bool {
+	return CheckIfPowerRawWord(w.seq)
 }

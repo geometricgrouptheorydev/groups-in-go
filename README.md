@@ -76,8 +76,8 @@ Due to the large potential scope of this project, this roadmap is not fixed and 
 
 ### CLI tool
 
-- [] Pretty-printing
-- [] SQL‑backed storage (Postgres)
+- [ ] Pretty-printing
+- [ ] SQL‑backed storage (Postgres)
 
 ## Contributions
 

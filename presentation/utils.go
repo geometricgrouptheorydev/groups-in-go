@@ -18,3 +18,16 @@ func abs(x int) int {
 func sign(x int) int {
 	if x < 0 { return -1 } else if x > 0 { return 1 } else { return 0 }
 }
+
+// Checks if two slices of comparables are equal
+func equalSlices[T comparable](u []T, v []T) bool {
+	if len(u) != len(v) {
+		return false
+	}
+	for i := range u {
+		if u[i] != v[i] {
+			return false
+		}
+	}
+	return true
+}

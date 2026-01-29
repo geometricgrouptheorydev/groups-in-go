@@ -1,9 +1,9 @@
 package presentation
 
 // Here are some helper functions that use the KMP prefix function on slices
-// This will allow multiple functions to be have O(n) time complexity rather than O(n^2) or On(n log n)
+// This will allow multiple functions to be have O(n) time complexity rather than O(n^2)
 
-// For each i := range w finds the longest prefix of w[i] that is also a suffix
+// For each i := range w finds the length of the longest prefix of w[i] that is also a suffix
 func KMPPrefixFunction[T comparable](w []T) []int {
 	pi := make([]int, len(w)) // pi[0] is always 0 so we won't change that in the loop
 	for i := 1; i < len(w); i++ {
@@ -76,4 +76,68 @@ func KMPCheckSubword[T comparable](sub, whole []T) bool {
 		} 
 	}
 	return false
+}
+
+// lists w as a subslice repeated several times, ordered from largest to lowest
+// the trivial (w, 1) is always returned
+func KMPFindRepeats[T comparable](w []T) []struct{
+	Sub []T
+	Reps int
+} {
+repeats := []struct{
+	Sub []T
+	Reps int
+}{
+	{
+		Sub: w,
+		Reps: 1,
+	},
+}
+pi := KMPPrefixFunction(w)
+n := len(w)
+for n > 0 {
+	// Initialize to the longest known prefix that is also a suffix (also known as a border)
+	// if w is v repeated, then v is repeated
+	// we check each border in order of decreasing length in the next loop iterations (borders of borders are borders)
+	n = pi[n-1]
+	// k is the number of positions between the start of the prefix and the start of its repetition as a suffix
+	// therefore k is the period of the slice
+	k := len(w) - n
+	// len(w) needs to be a multiple of k to have a chance of w being w[:n] repeated
+	// k also needs to be smaller than w lest we don't have a period at all!
+	// this suffices because w[i] = w[i + k]
+	if k < len(w) && len(w) % k == 0 {
+		rpt := struct{
+			Sub []T
+			Reps int
+		}{
+			Sub: w[:n],
+			Reps: len(w) / n,
+		}
+		repeats = append(repeats, rpt)
+	}
+}
+return repeats
+}
+
+// Checks if w is a slice that is a repeated subslice
+func KMPCheckRepeats[T comparable](w []T) bool {
+pi := KMPPrefixFunction(w)
+n := len(w)
+for n > 0 {
+	// Initialize to the longest known prefix that is also a suffix (also known as a border)
+	// if w is v repeated, then v is repeated
+	// we check each border in order of decreasing length in the next loop iterations (borders of borders are borders)
+	n = pi[n-1]
+	// k is the number of positions between the start of the prefix and the start of its repetition as a suffix
+	// therefore k is the period of the slice
+	k := len(w) - n
+	// len(w) needs to be a multiple of k to have a chance of w being w[:n] repeated
+	// k also needs to be smaller than w lest we don't have a period at all!
+	// this suffices because w[i] = w[i + k]
+	if k < len(w) && len(w) % k == 0 {
+		return true
+	}
+}
+return false
 }
