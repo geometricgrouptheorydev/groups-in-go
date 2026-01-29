@@ -30,6 +30,20 @@ func Len(w Word) int { return len(w.seq) } //length of the word
 func ConcatRawWord(a, b RawWord) RawWord { return append(append(RawWord{}, a...), b...) } //double appends for immutability
 func ConcatWord(v, w Word) Word          { return NewWord(ConcatRawWord(v.seq, w.seq)) }
 
+func PowRawWord(n int, w RawWord) RawWord {
+	switch {
+	case n > 0:
+		pow := w
+		for range n - 1 {
+			pow = ConcatRawWord(pow, w)
+		}
+		return ReduceRawWord(pow)
+	case n < 0:
+		return PowRawWord(-n, InvRawWord(w))
+	}
+	return EmptyRawWord()
+}
+
 // checks if two RawWords are equal
 func EqualRawWord(u, v RawWord) bool {
 	if len(u) != len(v) {
@@ -115,19 +129,27 @@ func CyclicReduceWord(w Word) Word {
 	return NewWord(c)
 }
 
-// checks if self is a subword of other
-func IsSubRawWord(self, other RawWord) bool {
-	sub := ReduceRawWord(self)
-	whole := ReduceRawWord(other)
-	if len(whole) < len(sub) {
-		return false
+// Helper for using KMP algorithms
+// Returns the same word but generally unreduced with all exponents 1 or -1
+func expandRawWord(w RawWord) RawWord{
+	expSum := 0 // Sum of exponents to determine how much memory we need to allocate
+	for _, u := range w {
+		expSum += abs(u[1])
 	}
-	for i := 0; i+len(sub) <= len(whole); i++ {
-		if EqualRawWord(sub, whole[i:i+len(sub)]) {
-			return true //match found
+	expanded := make(RawWord, 0, expSum)
+	for _, u := range w {
+		for range abs(u[1]) {
+				expanded = append(expanded, [2]int{u[0], sign(u[1])})
 		}
 	}
-	return false //all subwords don't match
+	return expanded
+}
+
+// Checks if self is a subword of other in O(n) time using the KMP prefix function
+func IsSubRawWord(self, other RawWord) bool {
+	sub := expandRawWord(self)
+	whole := expandRawWord(other)
+	return KMPCheckSubword(sub, whole)
 }
 
 func IsSubWord(self, other Word) bool {
@@ -199,4 +221,21 @@ func AbelianReduceRawWord(w RawWord) RawWord {
 
 func AbelianReduceWord(w Word) Word {
 	return NewWord(AbelianReduceRawWord(w.seq))
+}
+
+//struct to hols the roots of a RawWord
+type RawWordRoot struct {
+	root RawWord
+	repetitions int
+}
+
+// for a RawWord w, finds its roots (i.e. pairs v RawWord n int such that v^n = w)
+func FindRootsRawWord(w RawWord) []RawWordRoot {
+	roots := make([]RawWordRoot, 0)
+	for d := 1; d * d < len(w); d++ {
+		if len(w) % d == 0 {
+			break
+		}
+	}
+	return roots
 }

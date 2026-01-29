@@ -26,7 +26,7 @@ func Pow[T any](G Group[T], x T, n int) T {
 	result := G.Id()
 	switch {
 	case n > 0:
-		for i := 0; i < n; i++ {
+		for range n {
 			result = G.Mu(result, x)
 		}
 	case n < 0:

@@ -244,3 +244,40 @@ func TestShortLex(t *testing.T) {
 		})
 	}
 }
+
+func TestPowRawWord(t *testing.T) {
+	tests := []struct {
+		name string
+		in   RawWord
+		exp int
+		want RawWord
+	}{
+		{
+			name: "power of 3",
+			in:   RawWord{{1, 2}, {3, 4}, {5, 6}},
+			exp: 3,
+			want: RawWord{{1, 2}, {3, 4}, {5, 6}, {1, 2}, {3, 4}, {5, 6}, {1, 2}, {3, 4}, {5, 6}},
+		},
+		{
+			name: "power of 0",
+			in:   RawWord{{1, 2}, {1, -2}, {3, 5}, {3, 6}, {2, 1}, {2, -4}, {2, 2}},
+			exp: 0,
+			want: presentation.EmptyRawWord(),
+		},
+		{
+			name: "negative 3",
+			in:   RawWord{{0, 7}, {3, 4}},
+			exp: -3,
+			want: RawWord{{3, -4}, {0, -7}, {3, -4}, {0, -7}, {3, -4}, {0, -7}},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := presentation.PowRawWord(tt.exp, tt.in)
+			if !presentation.EqualRawWord(got, tt.want) {
+				t.Fatalf("PowRawWord(%v, %v) = %v, want %v", tt.exp, tt.in, got, tt.want)
+			}
+		})
+	}
+}
