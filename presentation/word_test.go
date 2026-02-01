@@ -281,3 +281,41 @@ func TestPowRawWord(t *testing.T) {
 		})
 	}
 }
+
+func TestCheckIfPowerWord(t *testing.T) {
+	tests := []struct {
+		name    string
+		in  RawWord
+		want    bool
+	}{
+		{
+			name:    "false",
+			in:  RawWord{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
+			want:    false,
+		},
+		{
+			name:    "square",
+			in:  RawWord{{6, -2}, {2, -3}, {6, -2}, {2, -3}},
+			want:    true,
+		},
+		{
+			name:    "fifth power",
+			in:  RawWord{{1, 2}, {2, -3}, {6, -7}, {1, 2}, {2, -3}, {6, -7}, {1, 2}, {2, -3}, {6, -7}, {1, 2}, {2, -3}, {6, -7}, {1, 2}, {2, -3}, {6, -7}},
+			want:    true,
+		},
+		{
+			name:    "same words",
+			in:  RawWord{{1, 2}, {3, 4}, {1, 1}, {1, 2}, {1, -1}, {3, -2}, {3, 6}},
+			want:    true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := presentation.CheckIfPowerRawWord(tt.in)
+			if !(tt.want == got) {
+				t.Fatalf("CheckIfPowerRawWord(%v) = %v, want %v", tt.in, got, tt.want)
+			}
+		})
+	}
+}
