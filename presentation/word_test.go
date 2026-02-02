@@ -95,6 +95,37 @@ func TestInverse(t *testing.T) {
 	}
 }
 
+func TestConjugate(t *testing.T) {
+	tests := []struct {
+		name string
+		in   RawWord
+		conj RawWord
+		want RawWord
+	}{
+		{
+			name: "empty",
+			in:   RawWord{},
+			conj: RawWord{{1,2},{3,4}},
+			want: RawWord{},
+		},
+		{
+			name: "single letter",
+			in:   RawWord{{0, 1}},
+			conj: RawWord{{1,2},{3,4}},
+			want: RawWord{{3,-4},{1,-2},{0, 1},{1,2},{3,4}},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := presentation.ConjugateRawWord(tt.in, tt.conj)
+			if !presentation.EqualRawWord(got, tt.want) {
+				t.Fatalf("ConjugateRawWord(%v, %v) = %v, want %v", tt.in, tt.conj, got, tt.want)
+			}
+		})
+	}
+}
+
 func TestReduce(t *testing.T) {
 	tests := []struct {
 		name string

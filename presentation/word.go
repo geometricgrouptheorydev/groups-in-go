@@ -69,6 +69,15 @@ func InvWord(w Word) Word {
 	return NewWord(InvRawWord(w.seq))
 }
 
+// Conjugates w by a
+func ConjugateRawWord(w RawWord, a RawWord) RawWord {
+	return ReduceRawWord(ConcatRawWord(InvRawWord(a), ConcatRawWord(w, a)))
+}
+
+func ConjugateWord(w Word, a Word) Word {
+	return NewWord(ConjugateRawWord(w.seq, a.seq))
+}
+
 // Free reduction of a RawWord
 func ReduceRawWord(w RawWord) RawWord {
 	r := make(RawWord, 0, len(w)) //r stands for reduced
@@ -230,4 +239,40 @@ func CheckIfPowerRawWord(w RawWord) bool {
 
 func CheckIfPowerWord(w Word) bool {
 	return CheckIfPowerRawWord(w.seq)
+}
+
+//struct that tells the roots of a word and the number of repeated concatenation needed to get the original word
+type rootsOfRawWord struct{
+	root RawWord
+	exp int
+}
+
+func FindRootsRawWord(w RawWord) []rootsOfRawWord{
+	reduced, conjugatedBy := CyclicReduceRawWord(w)
+	expanded := expandRawWord(reduced)
+	reducedRoots := KMPFindRepeats(expanded)
+	result := make([]rootsOfRawWord, len(reducedRoots))
+	for i := range reducedRoots {
+		result[i].exp = reducedRoots[i].Reps
+		result[i].root = ConjugateRawWord(reducedRoots[i].Sub, conjugatedBy)
+	}
+	return result
+}
+
+type rootsOfWord struct{
+	root Word
+	exp int
+}
+
+// we don't use the RawWord version of the function as that would require another loop
+func FindRootsWord(w Word) []rootsOfWord{
+	reduced, conjugatedBy := CyclicReduceRawWord(w.seq)
+	expanded := expandRawWord(reduced)
+	reducedRoots := KMPFindRepeats(expanded)
+	result := make([]rootsOfWord, len(reducedRoots))
+	for i := range reducedRoots {
+		result[i].exp = reducedRoots[i].Reps
+		result[i].root = NewWord(ConjugateRawWord(reducedRoots[i].Sub, conjugatedBy))
+	}
+	return result
 }
