@@ -31,3 +31,12 @@ func equalSlices[T comparable](u []T, v []T) bool {
 	}
 	return true
 }
+
+// Reverse a slice
+func reverseSlice[T comparable](s []T) []T {
+	reversed := make([]T, len(s))
+	for i := range s {
+		reversed[len(s) - 1 - i] = s[i]
+	}
+	return reversed
+}

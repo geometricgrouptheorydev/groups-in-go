@@ -93,32 +93,36 @@ func ReduceWord(w Word) Word {
 }
 
 // Cyclic Reduction
-func CyclicReduceRawWord(w RawWord) RawWord {
-	r := ReduceRawWord(w) //r for reduced
-	lim := len(r)
+// first output is the cyclically reduced word
+// the second output is the RawWord we conjugate w by to get the cyclic reduction
+func CyclicReduceRawWord(w RawWord) (RawWord, RawWord) {
+	reduced := ReduceRawWord(w) //r for reduced
+	conjugatedBy := make(RawWord, 0, len(reduced))
+	lim := len(reduced)
 	for i := 0; i < lim; i++ {
-		s := r[i]
-		last := r[lim - 1]
+		s := reduced[i]
+		last := reduced[lim - 1]
 		if s[0] == last[0] { //conjugate by a power of s[0]
-			r[i][1] += last[1]
-			r = r[:len(r) - 1]
+			reduced[i][1] += last[1]
+			reduced = reduced[:len(reduced) - 1]
+			conjugatedBy = append(conjugatedBy, last)
 			lim--
 		} else {
 			break //already cyclically reduced
 		}
 	}
-	c := make(RawWord, 0, len(r))
-	for _, s := range r {
+	cyclicallyReduced := make(RawWord, 0, len(reduced))
+	for _, s := range reduced {
 		if s[1] != 0 { //remove 0 exponents
-			c = append(c, s)
+			cyclicallyReduced = append(cyclicallyReduced, s)
 		}
 	}
-	return c
+	return cyclicallyReduced, reverseSlice(conjugatedBy)
 }
 
-func CyclicReduceWord(w Word) Word {
-	c := CyclicReduceRawWord(w.seq)
-	return NewWord(c)
+func CyclicReduceWord(w Word) (Word, Word) {
+	cyclicallyReduced, conjugatedBy := CyclicReduceRawWord(w.seq)
+	return NewWord(cyclicallyReduced), NewWord((conjugatedBy))
 }
 
 // Helper for using KMP algorithms
@@ -219,7 +223,8 @@ func AbelianReduceWord(w Word) Word {
 func CheckIfPowerRawWord(w RawWord) bool {
 	// If w has a root, so does its cyclic reduction
 	// For a cyclically reduced word, every root is a prefix of it
-	c := expandRawWord(CyclicReduceRawWord(w))
+	r, _ := CyclicReduceRawWord(w)
+	c := expandRawWord(r)
 	return KMPCheckRepeats(c)
 }
 
