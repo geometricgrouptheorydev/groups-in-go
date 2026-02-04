@@ -24,7 +24,7 @@ Once the CLI incorporates SQL (Postgres + migration / query tooling), those depe
 
 ## Roadmap
 
-Due to the large potential scope of this project, this roadmap is not fixed and not necessarily in implementation order. Items may be split further as the project grows. In particular, there is certainly more planned for the future than what is displayed below
+Due to the large potential scope of this project, this roadmap is not fixed and not necessarily in implementation order. Items may be split further as the project grows. In particular, new features will be added to the roadmap as the project grows.
 
 ### Core Structures
 
@@ -50,6 +50,8 @@ Due to the large potential scope of this project, this roadmap is not fixed and 
 
 - [X] Word Free and Cyclic Reductions
 - [X] Subword Detection
+ - [X] Using KMP
+ - [X] Primitive Word Roots
 - [ ] Multiplier Automata
 - [ ] Word Problem Solvers:
   - [X] Free Groups
@@ -58,6 +60,7 @@ Due to the large potential scope of this project, this roadmap is not fixed and 
   - [ ] Abelian Groups
   - [ ] Dehn Presentations
   - [ ] One-Relator Groups
+  - [ ] Residually Finite Groups
   - [ ] Partial solution for the general case
 - [ ] Normal Form Computations
 - [ ] Conjugacy Problem Solvers

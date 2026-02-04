@@ -241,42 +241,6 @@ func CheckIfPowerWord(w Word) bool {
 	return CheckIfPowerRawWord(w.seq)
 }
 
-//struct that tells the roots of a word and the number of repeated concatenation needed to get the original word
-type rootsOfRawWord struct{
-	root RawWord
-	exp int
-}
-
-func FindRootsRawWord(w RawWord) []rootsOfRawWord{
-	reduced, conjugatedBy := CyclicReduceRawWord(w)
-	expanded := expandRawWord(reduced)
-	reducedRoots := KMPFindRepeats(expanded)
-	result := make([]rootsOfRawWord, len(reducedRoots))
-	for i := range reducedRoots {
-		result[i].exp = reducedRoots[i].Reps
-		result[i].root = ConjugateRawWord(reducedRoots[i].Sub, conjugatedBy)
-	}
-	return result
-}
-
-type rootsOfWord struct{
-	root Word
-	exp int
-}
-
-// we don't use the RawWord version of the function as that would require another loop
-func FindRootsWord(w Word) []rootsOfWord{
-	reduced, conjugatedBy := CyclicReduceRawWord(w.seq)
-	expanded := expandRawWord(reduced)
-	reducedRoots := KMPFindRepeats(expanded)
-	result := make([]rootsOfWord, len(reducedRoots))
-	for i := range reducedRoots {
-		result[i].exp = reducedRoots[i].Reps
-		result[i].root = NewWord(ConjugateRawWord(reducedRoots[i].Sub, conjugatedBy))
-	}
-	return result
-}
-
 // A root of a word w is some subword v such that w = v^k for some positive k
 // Such a root is deemed non-trivial if k >= 2
 // By the Fine-Wilff theorem, for our purposes all words with a non-trivial root will have a smallest root that is a root of all other roots
