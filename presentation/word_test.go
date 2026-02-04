@@ -318,39 +318,49 @@ func TestPowRawWord(t *testing.T) {
 	}
 }
 
-func TestCheckIfPowerWord(t *testing.T) {
+func TestFindPrimitiveRoot(t *testing.T) {
 	tests := []struct {
 		name    string
 		in  RawWord
-		want    bool
+		wantRoot RawWord
+		wantExp int
+		wantBool    bool
 	}{
 		{
-			name:    "false",
+			name:    "false, just false",
 			in:  RawWord{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
-			want:    false,
+			wantBool:    false,
+			wantExp: 1,
+			wantRoot: RawWord{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
 		},
 		{
 			name:    "square",
 			in:  RawWord{{6, -2}, {2, -3}, {6, -2}, {2, -3}},
-			want:    true,
+			wantBool:    true,
+			wantExp: 2,
+			wantRoot: RawWord{{6, -2}, {2, -3}},
 		},
 		{
 			name:    "fifth power",
 			in:  RawWord{{1, 2}, {2, -3}, {6, -7}, {1, 2}, {2, -3}, {6, -7}, {1, 2}, {2, -3}, {6, -7}, {1, 2}, {2, -3}, {6, -7}, {1, 2}, {2, -3}, {6, -7}},
-			want:    true,
+			wantBool:    true,
+			wantExp: 5,
+			wantRoot: RawWord{{1, 2}, {2, -3}, {6, -7}},
 		},
 		{
-			name:    "same words",
+			name:    "square unreduced",
 			in:  RawWord{{1, 2}, {3, 4}, {1, 1}, {1, 2}, {1, -1}, {3, -2}, {3, 6}},
-			want:    true,
+			wantBool:    true,
+			wantExp: 2,
+			wantRoot: RawWord{{1, 2}, {3, 4}},
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := presentation.CheckIfPowerRawWord(tt.in)
-			if !(tt.want == got) {
-				t.Fatalf("CheckIfPowerRawWord(%v) = %v, want %v", tt.in, got, tt.want)
+			gotRoot, gotExp, gotBool := presentation.FindPrimitiveRootRawWord(tt.in)
+			if !(tt.wantBool == gotBool && tt.wantExp == gotExp && presentation.EqualRawWord(gotRoot, tt.wantRoot)) {
+				t.Fatalf("CheckIfPowerRawWord(%v) = %v, %v, %v, want %v, %v, %v", tt.in, gotRoot, gotExp, gotBool, tt.wantRoot, tt.wantExp, tt.wantBool)
 			}
 		})
 	}

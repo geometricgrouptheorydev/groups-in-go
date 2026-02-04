@@ -141,3 +141,27 @@ for n > 0 {
 }
 return false
 }
+
+// A root of a word w is some subword v such that w = v^k for some positive k
+// Such a root is deemed non-trivial if k >= 2
+// By the Fine-Wilff theorem, for our purposes all words with a non-trivial root will have a smallest root that is a root of all other roots
+// We call this the primitive root, the first output of this function
+// The second output gives the k for that primitive root
+// The third output is true exactly when the primitive root is non-trivial
+func KMPFindPrimitiveRoot[T comparable](w []T) ([]T, int, bool){
+	n := len(w)
+	if n == 0 {
+		return []T{}, 0, false
+	}
+
+	pi := KMPPrefixFunction(w)
+	r := n - pi[n-1] //primitive root length
+
+	// If r divides n and r < n, the word is (non-trivially) periodic 
+	if n%r == 0 {
+		exp := n/r
+		return w[:r], exp, exp > 1
+	} else {
+		return w, 1, false
+	}
+}

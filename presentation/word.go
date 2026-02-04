@@ -276,3 +276,21 @@ func FindRootsWord(w Word) []rootsOfWord{
 	}
 	return result
 }
+
+// A root of a word w is some subword v such that w = v^k for some positive k
+// Such a root is deemed non-trivial if k >= 2
+// By the Fine-Wilff theorem, for our purposes all words with a non-trivial root will have a smallest root that is a root of all other roots
+// We call this the primitive root, the first output of this function
+// The second output gives the k for that primitive root
+// The third output is true exactly when the primitive root is non-trivial
+func FindPrimitiveRootRawWord(w RawWord) (RawWord, int, bool)  {
+	reduced, conj := CyclicReduceRawWord(w)
+	root, exp, ok := KMPFindPrimitiveRoot(expandRawWord(reduced))
+	if !ok {return reduced, 1, false}
+	return ConjugateRawWord(ReduceRawWord(root), conj), exp, true
+}
+
+func FindPrimitiveRootWord(w Word) (Word, int, bool) {
+	root, exp, ok := FindPrimitiveRootRawWord(w.seq)
+	return NewWord(root), exp, ok
+}
