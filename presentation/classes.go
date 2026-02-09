@@ -13,6 +13,7 @@ const (
 	Abelian Class = "abelian"
 	Cyclic Class = "cyclic"
 	Finite Class = "finite"
+	Dehn Class = "dehn"
 )
 
 //helper to copy class maps definied here without mutating them. 
@@ -27,6 +28,23 @@ func (G *GroupPresentation) addClasses(newClasses map[Class]bool) error {
 	}
 	return nil
 }
+
+//for manually adding a property, positive or negative, but warning if that changed another value
+func (G * GroupPresentation) AddClass(c Class, t bool) error {	
+		oldVal, ok := G.classes[c]
+		G.classes[c] = t 
+		if ok && oldVal != t {
+			return fmt.Errorf("error: internal truth value changed for group class %v", c)
+		} else {
+			return nil
+		}
+}
+
+//this is for group properties that depend on a particular presentation rather than being 
+func (G *GroupPresentation) RemoveClass(c Class) {
+	delete(G.classes, c)
+}
+
 
 //below are internal arguments used in addClasses calls elsewhere
 //not to be mutated
