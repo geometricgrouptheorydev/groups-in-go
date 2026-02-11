@@ -6,6 +6,7 @@ package presentation
 // the higher the priority the better the reduction algorithm for computation!
 var reduceCLassPriority = []Class{Trivial, Cyclic, FreeAbelian, Abelian, Free, OneRelator}
 
+
 func (G *GroupPresentation) Reduce(w Word) (Word, error) {
 	err := G.IsValidWord(w) //we need to use the O(n) IsValidWord method because some cases panic on invalid words
 	if err != nil {
@@ -24,6 +25,8 @@ func (G *GroupPresentation) Reduce(w Word) (Word, error) {
 				return G.handleReduceAbelian(w), nil
 			case Free:
 				return ReduceWord(w), nil //plain old word reduction
+			case Dehn:
+				return G.DehnReduce(w), nil
 			case OneRelator:
 				return G.handleReduceOneRelator(w), nil
 			}

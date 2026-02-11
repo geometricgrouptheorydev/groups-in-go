@@ -48,10 +48,11 @@ Due to the large potential scope of this project, this roadmap is not fixed and 
 
 ### Algorithms
 
-- [X] Word Free and Cyclic Reductions
+- [X] Free and Cyclic Reductions
 - [X] Subword Detection
  - [X] Using KMP
  - [X] Primitive Word Roots
+- [ ] Rewriting Systems
 - [ ] Multiplier Automata
 - [ ] Word Problem Solvers:
   - [X] Free Groups

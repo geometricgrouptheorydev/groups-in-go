@@ -110,10 +110,10 @@ func CyclicReduceRawWord(w RawWord) (RawWord, RawWord) {
 	lim := len(reduced)
 	for i := 0; i < lim; i++ {
 		s := reduced[i]
-		last := reduced[lim - 1]
+		last := reduced[lim-1]
 		if s[0] == last[0] { //conjugate by a power of s[0]
 			reduced[i][1] += last[1]
-			reduced = reduced[:len(reduced) - 1]
+			reduced = reduced[:len(reduced)-1]
 			conjugatedBy = append(conjugatedBy, last)
 			lim--
 		} else {
@@ -136,7 +136,7 @@ func CyclicReduceWord(w Word) (Word, Word) {
 
 // Helper for using KMP algorithms
 // Returns the same word but unreduced with all exponents 1 or -1
-func expandRawWord(w RawWord) RawWord{
+func expandRawWord(w RawWord) RawWord {
 	expSum := 0 // Sum of exponents to determine how much memory we need to allocate
 	for _, u := range w {
 		expSum += abs(u[1])
@@ -144,21 +144,22 @@ func expandRawWord(w RawWord) RawWord{
 	expanded := make(RawWord, 0, expSum)
 	for _, u := range w {
 		for range abs(u[1]) {
-				expanded = append(expanded, [2]int{u[0], sign(u[1])})
+			expanded = append(expanded, [2]int{u[0], sign(u[1])})
 		}
 	}
 	return expanded
 }
 
-// Checks if self is a subword of other in O(n) using the KMP prefix function
-func IsSubRawWord(self, other RawWord) bool {
-	sub := expandRawWord(self)
-	whole := expandRawWord(other)
-	return KMPCheckSubword(sub, whole)
+// Returns the index of the start of the first match of sub in whole (expanded) and true if there is a match
+// For example SubRawWordFirstMatch({{1,1},{3,2}},{{2,7},{1,3},{3,4}}) returns 9, true
+// Otherwise, return -1 and false (-1 is used as that is not a valid index in Go, always check the boolean to avoid panics)
+// This function can also be used to find any match at all by ignoring the integer returned
+func SubRawWordFirstMatch(sub, whole RawWord) (int, bool) {
+	return KMPSubFirstMatch(expandRawWord(sub), expandRawWord(whole))
 }
 
-func IsSubWord(self, other Word) bool {
-	return IsSubRawWord(self.seq, other.seq)
+func SubWordFirstMatch(sub, whole Word) (int, bool) {
+	return SubRawWordFirstMatch(sub.seq, whole.seq)
 }
 
 // ShortLexRawWord reports whether a < b in shortlex order.
@@ -228,7 +229,7 @@ func AbelianReduceWord(w Word) Word {
 	return NewWord(AbelianReduceRawWord(w.seq))
 }
 
-//checks if w is the power of another subword
+// checks if w is the power of another subword
 func CheckIfPowerRawWord(w RawWord) bool {
 	// If w has a root, so does its cyclic reduction
 	// For a cyclically reduced word, every root is a prefix of it
@@ -247,10 +248,12 @@ func CheckIfPowerWord(w Word) bool {
 // We call this the primitive root, the first output of this function
 // The second output gives the k for that primitive root
 // The third output is true exactly when the primitive root is non-trivial
-func FindPrimitiveRootRawWord(w RawWord) (RawWord, int, bool)  {
+func FindPrimitiveRootRawWord(w RawWord) (RawWord, int, bool) {
 	reduced, conj := CyclicReduceRawWord(w)
 	root, exp, ok := KMPFindPrimitiveRoot(expandRawWord(reduced))
-	if !ok {return reduced, 1, false}
+	if !ok {
+		return reduced, 1, false
+	}
 	return ConjugateRawWord(ReduceRawWord(root), conj), exp, true
 }
 

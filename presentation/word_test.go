@@ -105,14 +105,14 @@ func TestConjugate(t *testing.T) {
 		{
 			name: "empty",
 			in:   RawWord{},
-			conj: RawWord{{1,2},{3,4}},
+			conj: RawWord{{1, 2}, {3, 4}},
 			want: RawWord{},
 		},
 		{
 			name: "single letter",
 			in:   RawWord{{0, 1}},
-			conj: RawWord{{1,2},{3,4}},
-			want: RawWord{{3,-4},{1,-2},{0, 1},{1,2},{3,4}},
+			conj: RawWord{{1, 2}, {3, 4}},
+			want: RawWord{{3, -4}, {1, -2}, {0, 1}, {1, 2}, {3, 4}},
 		},
 	}
 
@@ -182,13 +182,13 @@ func TestCyclicReduce(t *testing.T) {
 			name: "simple cyclic reduction",
 			in:   RawWord{{0, 7}, {3, 4}, {2, -4}, {0, -7}},
 			want: RawWord{{3, 4}, {2, -4}},
-			conj: RawWord{{0,-7}},
+			conj: RawWord{{0, -7}},
 		},
 		{
 			name: "bigger cyclic reduction",
 			in:   RawWord{{5, 5}, {4, -2}, {0, 8}, {3, 4}, {2, -4}, {0, -7}, {4, 2}, {5, -5}},
 			want: RawWord{{0, 1}, {3, 4}, {2, -4}},
-			conj: RawWord{{0,-7},{4,2},{5,-5}},
+			conj: RawWord{{0, -7}, {4, 2}, {5, -5}},
 		},
 	}
 
@@ -202,32 +202,35 @@ func TestCyclicReduce(t *testing.T) {
 	}
 }
 
-func TestIsSubword(t *testing.T) {
+func TestSubRawWordFirstMatch(t *testing.T) {
 	tests := []struct {
 		name  string
 		whole RawWord
 		sub   RawWord
-		want  bool
+		wantInt int
+		wantBool  bool
 	}{
 		{
 			name:  "subword",
 			whole: RawWord{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
 			sub:   RawWord{{6, -7}, {3, 1}},
-			want:  true,
+			wantInt: 5,
+			wantBool:  true,
 		},
 		{
 			name:  "not subword",
 			whole: RawWord{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
 			sub:   RawWord{{6, -7}, {2, -3}},
-			want:  false,
+			wantInt: -1,
+			wantBool:  false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := presentation.IsSubRawWord(tt.sub, tt.whole)
-			if got != tt.want {
-				t.Fatalf("IsSubword(%v, %v) = %v, want %v", tt.sub, tt.whole, got, tt.want)
+			gotInt, gotBool := presentation.SubRawWordFirstMatch(tt.sub, tt.whole)
+			if gotBool != tt.wantBool {
+				t.Fatalf("IsSubword(%v, %v) = %v, %v, want %v, %v", tt.sub, tt.whole, gotInt, gotBool, tt.wantInt, tt.wantBool)
 			}
 		})
 	}
@@ -285,25 +288,25 @@ func TestPowRawWord(t *testing.T) {
 	tests := []struct {
 		name string
 		in   RawWord
-		exp int
+		exp  int
 		want RawWord
 	}{
 		{
 			name: "power of 3",
 			in:   RawWord{{1, 2}, {3, 4}, {5, 6}},
-			exp: 3,
+			exp:  3,
 			want: RawWord{{1, 2}, {3, 4}, {5, 6}, {1, 2}, {3, 4}, {5, 6}, {1, 2}, {3, 4}, {5, 6}},
 		},
 		{
 			name: "power of 0",
 			in:   RawWord{{1, 2}, {1, -2}, {3, 5}, {3, 6}, {2, 1}, {2, -4}, {2, 2}},
-			exp: 0,
+			exp:  0,
 			want: presentation.EmptyRawWord(),
 		},
 		{
 			name: "negative 3",
 			in:   RawWord{{0, 7}, {3, 4}},
-			exp: -3,
+			exp:  -3,
 			want: RawWord{{3, -4}, {0, -7}, {3, -4}, {0, -7}, {3, -4}, {0, -7}},
 		},
 	}
@@ -320,38 +323,38 @@ func TestPowRawWord(t *testing.T) {
 
 func TestFindPrimitiveRoot(t *testing.T) {
 	tests := []struct {
-		name    string
-		in  RawWord
+		name     string
+		in       RawWord
 		wantRoot RawWord
-		wantExp int
-		wantBool    bool
+		wantExp  int
+		wantBool bool
 	}{
 		{
-			name:    "false, just false",
-			in:  RawWord{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
-			wantBool:    false,
-			wantExp: 1,
+			name:     "false, just false",
+			in:       RawWord{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
+			wantBool: false,
+			wantExp:  1,
 			wantRoot: RawWord{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
 		},
 		{
-			name:    "square",
-			in:  RawWord{{6, -2}, {2, -3}, {6, -2}, {2, -3}},
-			wantBool:    true,
-			wantExp: 2,
+			name:     "square",
+			in:       RawWord{{6, -2}, {2, -3}, {6, -2}, {2, -3}},
+			wantBool: true,
+			wantExp:  2,
 			wantRoot: RawWord{{6, -2}, {2, -3}},
 		},
 		{
-			name:    "fifth power",
-			in:  RawWord{{1, 2}, {2, -3}, {6, -7}, {1, 2}, {2, -3}, {6, -7}, {1, 2}, {2, -3}, {6, -7}, {1, 2}, {2, -3}, {6, -7}, {1, 2}, {2, -3}, {6, -7}},
-			wantBool:    true,
-			wantExp: 5,
+			name:     "fifth power",
+			in:       RawWord{{1, 2}, {2, -3}, {6, -7}, {1, 2}, {2, -3}, {6, -7}, {1, 2}, {2, -3}, {6, -7}, {1, 2}, {2, -3}, {6, -7}, {1, 2}, {2, -3}, {6, -7}},
+			wantBool: true,
+			wantExp:  5,
 			wantRoot: RawWord{{1, 2}, {2, -3}, {6, -7}},
 		},
 		{
-			name:    "square unreduced",
-			in:  RawWord{{1, 2}, {3, 4}, {1, 1}, {1, 2}, {1, -1}, {3, -2}, {3, 6}},
-			wantBool:    true,
-			wantExp: 2,
+			name:     "square unreduced",
+			in:       RawWord{{1, 2}, {3, 4}, {1, 1}, {1, 2}, {1, -1}, {3, -2}, {3, 6}},
+			wantBool: true,
+			wantExp:  2,
 			wantRoot: RawWord{{1, 2}, {3, 4}},
 		},
 	}
