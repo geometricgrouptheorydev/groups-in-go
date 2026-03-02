@@ -159,7 +159,24 @@ func expandRawWord(w RawWord) RawWord {
 	return expanded
 }
 
-
+// This function outputs the same as expandRawWord(w.seq RawWord)[i][0] * expandRawWord(w.seq RawWord)[i][1]  without the memory cost in O(log n) time
+// That is the generator at the ith position but negated if we have its inverse
+// e.g. the value at the 0th and 5th index of a^3b^-3c^2, represented as {{0,3},{1,-3},{2,2}} is -1
+// Careful! This function panics on an invalid index.
+func (w Word) At(i int) int {
+	if i < 0 || i >= w.offsets[len(w.offsets)-1] { panic("invalid index") }
+	lo, hi := 0, w.offsets[len(w.offsets)-1]
+	for lo < hi {
+		mid := (lo + hi) / 2 //search the index from the middle, then choose a side, then take the middle of that side, and so on
+		if w.offsets[mid] > i {
+			hi = mid
+		} else {
+			lo = mid + 1
+		}
+	}
+	val := w.seq[lo]
+	return val[0] * val[1]
+}
 
 // Returns the index of the start of the first match of sub in whole (expanded) and true if there is a match
 // For example SubRawWordFirstMatch({{1,1},{3,2}},{{2,7},{1,3},{3,4}}) returns 9, true
