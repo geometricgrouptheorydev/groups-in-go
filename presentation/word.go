@@ -11,14 +11,23 @@ type RawWord [][2]int
 type Word struct {
 	seq RawWord //seq is short for sequence
 	id  string  //is always equal to WordID(Word.slice)
+	offsets []int //cumulative expanded lengths
 }
 
 // Constructor for a new Word based on a RawWord
 // Most functions on Words call NewWord on the output of its corresponding RawWord version of the function
 func NewWord(w [][2]int) Word {
+	// first we calculate the offsers
+	offsets := make([]int, len(w)) 
+	total := 0 
+	for i, u:= range w { 
+		total += abs(u[1]) 
+		offsets[i] = total 
+	}
 	return Word{
 		seq: w,
 		id:  WordID(w),
+		offsets: offsets,
 	}
 }
 
@@ -134,7 +143,7 @@ func CyclicReduceWord(w Word) (Word, Word) {
 	return NewWord(cyclicallyReduced), NewWord((conjugatedBy))
 }
 
-// Helper for using KMP algorithms
+// (Temporary) Helper for using KMP algorithms
 // Returns the same word but unreduced with all exponents 1 or -1
 func expandRawWord(w RawWord) RawWord {
 	expSum := 0 // Sum of exponents to determine how much memory we need to allocate
@@ -149,6 +158,8 @@ func expandRawWord(w RawWord) RawWord {
 	}
 	return expanded
 }
+
+
 
 // Returns the index of the start of the first match of sub in whole (expanded) and true if there is a match
 // For example SubRawWordFirstMatch({{1,1},{3,2}},{{2,7},{1,3},{3,4}}) returns 9, true
