@@ -8,6 +8,7 @@ import (
 
 type RawWord = presentation.RawWord
 
+
 func TestEqualWord(t *testing.T) {
 	tests := []struct {
 		name   string
@@ -197,6 +198,37 @@ func TestCyclicReduce(t *testing.T) {
 			gotReduced, gotConjugate := presentation.CyclicReduceRawWord(tt.in)
 			if !presentation.EqualRawWord(gotReduced, tt.want) || !presentation.EqualRawWord(gotConjugate, tt.conj) {
 				t.Fatalf("CyclicReduceRawWord(%v) = %v, %v, want %v, %v", tt.in, gotReduced, gotConjugate, tt.want, tt.conj)
+			}
+		})
+	}
+}
+
+func TestAt(t *testing.T) {
+	tests := []struct {
+		name string
+		word Word
+		index int
+		want int
+	}{
+		{
+			name: "positive",
+			word: presentation.NewWord(RawWord{{1,2},{2,-3},{3,4},{5,-2}}),
+			index: 6,
+			want: 3,
+		},
+		{
+			name: "negative",
+			word: presentation.NewWord(RawWord{{1,2},{2,-3},{3,4},{5,-2}}),
+			index: 4,
+			want: -2,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.word.At(tt.index)
+			if got != tt.want {
+				t.Fatalf("%v.At(%v) = %v want %v", tt.word, tt.index, got, tt.want)
 			}
 		})
 	}

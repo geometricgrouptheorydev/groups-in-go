@@ -45,7 +45,7 @@ func ParseWordID(id string) (RawWord, error) {
 	return w, nil
 }
 
-//It is unlikely that the user would truly need it, nonetheless it is useful for carrying out tests
+//It is unlikely that the user would truly need this function, nonetheless it is useful for carrying out tests
 func GetWordOffsets(w Word) []int {
 	return w.offsets
 }

@@ -9,24 +9,24 @@ type RawWord [][2]int
 // This struct is treated as immutable
 // id permits set-like behavior in word presentations
 type Word struct {
-	seq RawWord //seq is short for sequence
-	id  string  //is always equal to WordID(Word.slice)
-	offsets []int //cumulative expanded lengths
+	seq     RawWord //seq is short for sequence
+	id      string  //is always equal to WordID(Word.slice)
+	offsets []int   //cumulative expanded lengths
 }
 
 // Constructor for a new Word based on a RawWord
 // Most functions on Words call NewWord on the output of its corresponding RawWord version of the function
 func NewWord(w [][2]int) Word {
-	// first we calculate the offsers
-	offsets := make([]int, len(w)) 
-	total := 0 
-	for i, u:= range w { 
-		total += abs(u[1]) 
-		offsets[i] = total 
+	// first we calculate the offsets, which is data that speeds up indexing words
+	offsets := make([]int, len(w))
+	total := 0
+	for i, u := range w {
+		total += abs(u[1])
+		offsets[i] = total
 	}
 	return Word{
-		seq: w,
-		id:  WordID(w),
+		seq:     w,
+		id:      WordID(w),
 		offsets: offsets,
 	}
 }
@@ -159,13 +159,15 @@ func expandRawWord(w RawWord) RawWord {
 	return expanded
 }
 
-// This function outputs the same as expandRawWord(w.seq RawWord)[i][0] * expandRawWord(w.seq RawWord)[i][1]  without the memory cost in O(log n) time
+// This function outputs the same as expandRawWord(w.seq RawWord)[i][0] * expandRawWord(w.seq RawWord)[i][1] without the memory cost in O(log n) time
 // That is the generator at the ith position but negated if we have its inverse
-// e.g. the value at the 0th and 5th index of a^3b^-3c^2, represented as {{0,3},{1,-3},{2,2}} is -1
+// e.g. the value at the 5th index of a^3b^-3c^2, represented as {{0,3},{1,-3},{2,2}} is -1
 // Careful! This function panics on an invalid index.
 func (w Word) At(i int) int {
-	if i < 0 || i >= w.offsets[len(w.offsets)-1] { panic("invalid index") }
-	lo, hi := 0, w.offsets[len(w.offsets)-1]
+	if i < 0 || i >= w.offsets[len(w.offsets)-1] {
+		panic("invalid index")
+	}
+	lo, hi := 0, len(w.offsets)-1
 	for lo < hi {
 		mid := (lo + hi) / 2 //search the index from the middle, then choose a side, then take the middle of that side, and so on
 		if w.offsets[mid] > i {
@@ -175,7 +177,10 @@ func (w Word) At(i int) int {
 		}
 	}
 	val := w.seq[lo]
-	return val[0] * val[1]
+	if val[1] < 0 {
+		return -val[0]
+	}
+	return val[0]
 }
 
 // Returns the index of the start of the first match of sub in whole (expanded) and true if there is a match
