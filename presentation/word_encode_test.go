@@ -2,7 +2,7 @@ package presentation_test
 
 import (
 	"testing"
-
+	"reflect"
 	p "github.com/geometricgrouptheorydev/groups-in-go/presentation"
 )
 
@@ -75,6 +75,34 @@ func TestParseWordID(t *testing.T) {
 			}
 			if !p.EqualRawWord(got, tt.want) {
 				t.Fatalf("ParseWordID(%v) = %v want %v", tt.wordID, got, tt.want)
+			}
+		})
+	}
+}
+
+func TestNewWordOffsets(t *testing.T) {
+	tests := []struct{
+		name string
+		raw RawWord
+		want []int
+	}{
+		{
+			name: "some word",
+			raw: RawWord{{0,2},{3,-5},{2,2}},
+			want: []int{2,7,9},
+		},
+		{ 
+			name: "empty word",
+			raw: RawWord{},
+			want: []int{},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := p.GetWordOffsets(p.NewWord(tt.raw))
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Fatalf("Word's offsets are calculated as %v. Should have been %v", got, tt.raw)
 			}
 		})
 	}
