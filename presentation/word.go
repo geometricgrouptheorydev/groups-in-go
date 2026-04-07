@@ -195,6 +195,11 @@ func SubWordFirstMatch(sub, whole Word) (int, bool) {
 	return SubRawWordFirstMatch(sub.seq, whole.seq)
 }
 
+// Use only on words that are already expanded
+func SubExpandedRawWordFirstMatch(sub, whole RawWord) (int, bool) {
+	return KMPSubFirstMatch(sub, whole)
+}
+
 // ShortLexRawWord reports whether a < b in shortlex order.
 func ShortLexRawWord(a, b RawWord) bool {
 	if len(a) != len(b) {
