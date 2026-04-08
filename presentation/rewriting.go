@@ -2,6 +2,8 @@ package presentation
 
 // Replaces the first instance of sub in w by replacement
 func (w RawWord) ReplaceRawSubWordFirstMatch(sub RawWord, replacement RawWord) RawWord {
+	// Notice: we currently allow sub to be empty which effectively makes it prepend replacement on w. This may change if it causes problems.
+
 	// We expand w for now, this will change once the KMP algorithms are exponent-sensitive
 	v, s := expandRawWord(w), expandRawWord(sub)
 	index, exists := SubExpandedRawWordFirstMatch(s, v)

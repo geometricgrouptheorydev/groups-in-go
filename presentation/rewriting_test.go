@@ -16,10 +16,10 @@ func TestReplaceRawSubWordFirstMatch(t *testing.T) {
 	}{
 		{
 			name:  "subword",
-			whole: RawWord{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
+			whole: RawWord{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}, {6, -7}, {3, 1}},
 			sub:   RawWord{{6, -7}, {3, 1}},
 			replacement: RawWord{{2, 3},{4, -1}},
-			want:  RawWord{{1, 2}, {4, 6}},
+			want:  RawWord{{1, 2}, {4, 6}, {6, -7}, {3, 1}},
 		},
 		{
 			name:  "not subword",
@@ -27,6 +27,13 @@ func TestReplaceRawSubWordFirstMatch(t *testing.T) {
 			sub:   RawWord{{6, -7}, {2, -3}},
 			replacement: RawWord{},
 			want:  RawWord{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
+		},
+		{
+			name: "empty subword",
+			whole: RawWord{{4,6},{9,2},{3,-4}},
+			sub: RawWord{},
+			replacement: RawWord{{1,1}},
+			want: RawWord{{1,1},{4,6},{9,2},{3,-4}},
 		},
 	}
 
