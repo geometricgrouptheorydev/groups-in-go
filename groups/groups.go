@@ -16,6 +16,12 @@ type Group[T any] interface {
 	Equal(T, T) bool 
 }
 
+type FinitelyGeneratedGroup[T any] interface {
+	Group[T]
+	// Ordered generating set for the group
+	Generators() []T
+}
+
 //conjugates x by y. we take the y^-1xy convention
 func Conj[T any](G Group[T], x T, y T) T {
 	return G.Mu(G.Mu(G.Inv(y), x), y)
