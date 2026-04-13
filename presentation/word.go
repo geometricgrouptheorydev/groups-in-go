@@ -34,7 +34,7 @@ func NewWord(w [][2]int) Word {
 func EmptyRawWord() RawWord { return RawWord{} }
 func EmptyWord() Word       { return NewWord(EmptyRawWord()) }
 
-func Len(w Word) int { return len(w.seq) } //length of the word
+func CompactLen(w Word) int { return len(w.seq) } 
 
 func ConcatRawWord(a, b RawWord) RawWord { return append(append(RawWord{}, a...), b...) } //double appends for immutability
 func ConcatWord(v, w Word) Word          { return NewWord(ConcatRawWord(v.seq, w.seq)) }

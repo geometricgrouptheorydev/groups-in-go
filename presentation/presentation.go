@@ -52,7 +52,7 @@ func NewGroupPresentation(generators int, relations WordSet) (*GroupPresentation
 			}
 		}
 		reduced := ReduceWord(r) //we will not add it to the relations set if empty
-		if Len(reduced) > 0 {
+		if CompactLen(reduced) > 0 {
 			reducedRelations.Add(ReduceWord(r))
 		}
 	}
@@ -110,5 +110,5 @@ func (G *GroupPresentation) Id() Word {
 
 // WARNING: if the word problem is not solvable for your particular presentation, false does not guarantee inequality
 func (G *GroupPresentation) Equal(v Word, w Word) bool {
-	return Len(G.Mu(v, G.Inv(w))) == 0 //checks if vw^-1 is the empty word
+	return CompactLen(G.Mu(v, G.Inv(w))) == 0 //checks if vw^-1 is the empty word
 }
