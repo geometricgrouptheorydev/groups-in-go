@@ -3,6 +3,8 @@ package presentation
 // Here are some helper functions that use the KMP prefix function on slices
 // This will allow multiple functions to be have O(n) time complexity rather than O(n^2)
 
+// This first batch of functions use the standard slice indexing
+
 // For each i := range w finds the length of the longest prefix of w[i] that is also a suffix
 func KMPPrefixFunction[T comparable](w []T) []int {
 	pi := make([]int, len(w)) // pi[0] is always 0 so we won't change that in the loop

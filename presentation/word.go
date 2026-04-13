@@ -36,6 +36,9 @@ func EmptyWord() Word       { return NewWord(EmptyRawWord()) }
 
 func CompactLen(w Word) int { return len(w.seq) } 
 
+// Gives the true length of a word (sum of absolute exponents of all generators).
+func Len(w Word) int { return w.offsets[len(w.offsets) - 1] }
+
 func ConcatRawWord(a, b RawWord) RawWord { return append(append(RawWord{}, a...), b...) } //double appends for immutability
 func ConcatWord(v, w Word) Word          { return NewWord(ConcatRawWord(v.seq, w.seq)) }
 
