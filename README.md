@@ -26,6 +26,8 @@ Once the CLI incorporates SQL (Postgres + migration / query tooling), those depe
 
 Due to the large potential scope of this project, this roadmap is not fixed and not necessarily in implementation order. Items may be split further as the project grows. In particular, new features will be added to the roadmap as the project grows.
 
+NB: I am currently improving the implementations of words using a tree structure instead of a slice of arrays. 
+
 ### Core Structures
 
 - [X] Group Inteface

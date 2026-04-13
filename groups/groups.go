@@ -19,6 +19,7 @@ type Group[T any] interface {
 type FinitelyGeneratedGroup[T any] interface {
 	Group[T]
 	// Ordered generating set for the group
+	// Generators assumed not to be equal from the Equal(T,T) bool perspective
 	Generators() []T
 }
 
