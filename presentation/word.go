@@ -187,18 +187,15 @@ func (w Word) At(i int) int {
 }
 
 // Returns the index of the start of the first match of sub in whole (expanded) and true if there is a match
-// For example SubRawWordFirstMatch({{1,1},{3,2}},{{2,7},{1,3},{3,4}}) returns 9, true
+// For example SubWordFirstMatch(NewWord({{1,1},{3,2}}),NewWord({{2,7},{1,3},{3,4}})) returns 9, true
 // Otherwise, return -1 and false (-1 is used as that is not a valid index in Go, always check the boolean to avoid panics)
 // This function can also be used to find any match at all by ignoring the integer returned
-func SubRawWordFirstMatch(sub, whole RawWord) (int, bool) {
-	return KMPSubFirstMatch(expandRawWord(sub), expandRawWord(whole))
-}
-
+// This function makes use of the Word struct metadata so a RawWord version does not exist
 func SubWordFirstMatch(sub, whole Word) (int, bool) {
-	return SubRawWordFirstMatch(sub.seq, whole.seq)
+	return KMPSubFirstMatchAt(sub.At, whole.At, Len(sub), Len(whole))
 }
 
-// Use only on words that are already expanded
+// Use only on RawWords that are already expanded
 func SubExpandedRawWordFirstMatch(sub, whole RawWord) (int, bool) {
 	return KMPSubFirstMatch(sub, whole)
 }

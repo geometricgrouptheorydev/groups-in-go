@@ -4,6 +4,8 @@ package presentation
 // This will allow multiple functions to be have O(n) time complexity rather than O(n^2)
 
 // This first batch of functions use the standard slice indexing
+// This batch left here as legacy code that is no longer used by the package
+// See the second batch below for the functions used by the package
 
 // For each i := range w finds the length of the longest prefix of w[i] that is also a suffix
 func KMPPrefixFunction[T comparable](w []T) []int {
@@ -169,4 +171,95 @@ func KMPFindPrimitiveRoot[T comparable](w []T) ([]T, int, bool) {
 	} else {
 		return w, 1, false
 	}
+}
+
+// This second batch of functions uses indexing determined by an index function provided by the user
+
+// Input: Method value on a composite data type and length of the composite data (which need not be the "typical" slice length)
+// e.g. for Words, it would correspond to KMPPrefixFunctionAt(w.At, Len(w))
+// Output: for each i := range length finds the length of the longest prefix of the first at(i) entries that is also a suffix
+// Note: 'at' should be idempotent (return the same value for the same index).
+func KMPPrefixFunctionAt[T comparable](at func(int) T, length int) []int {
+	pi := make([]int, length) // pi[0] is always 0 so we won't change that in the loop
+	for i := 1; i < length; i++ {
+		// Initialize j with the value from the previous position
+		j := pi[i-1]
+		// Cache current value to avoid redundant calls to the 'at' accessor
+		valI := at(i)
+		// Continue updating j until a match is found or j becomes 0
+		for j > 0 && valI != at(j) {
+			j = pi[j-1]
+		}
+		// If a match is found, increment the length of the common prefix/suffix
+		if valI == at(j) {
+			j++
+		}
+		// Update the Prefix Function value for the current position
+		pi[i] = j
+	}
+	return pi
+}
+
+// Input: Method values on two composite data type and their lenghts
+// e.g. for Words, it would correspond to KMPSearchSubAt(sub.At, whole.At, Len(sub), Len(whole))
+// Returns the indices where each occurence of sub appears in whole
+func KMPSearchSubAt[T comparable](subAt, wholeAt func(int) T, lenSub, lenWhole int) []int {
+	// Take care of the trivial cases
+	if lenSub == 0 {
+		everywhere := make([]int, lenWhole)
+		for i := range lenWhole {
+			everywhere[i] = i
+		}
+		return everywhere
+	} else if lenSub > lenWhole {
+		nowhere := make([]int, 0)
+		return nowhere
+	}
+	occurences := make([]int, 0)
+	pi := KMPPrefixFunctionAt(subAt, lenSub)
+	j := 0 // current match length
+	for i := range lenWhole {
+		// Cache current value to avoid redundant calls to the 'at' accessor
+		valI := wholeAt(i)
+		for j > 0 && valI != subAt(j) {
+			j = pi[j-1]
+		}
+		if valI == subAt(j) {
+			j++
+		}
+		if j == lenSub {
+			occurences = append(occurences, i-j+1)
+			j = pi[j-1]
+		}
+	}
+	return occurences
+}
+
+// Input: Method values on two composite data type and their lenghts
+// e.g. for Words, it would correspond to KMPSubFirstMatchAt(sub.At, whole.At, Len(sub), Len(whole))
+// Returns the index of the start of the first match of sub in whole and true if there is a match
+// Otherwise, return -1 and false (-1 is used as that is not a valid index in Go, always check the boolean to avoid panics)
+func KMPSubFirstMatchAt[T comparable](subAt, wholeAt func(int) T, lenSub, lenWhole int) (int, bool) {
+	// Take care of the trivial cases
+	if lenSub == 0 {
+		return 0, true
+	} else if lenSub > lenWhole {
+		return -1, false
+	}
+	pi := KMPPrefixFunctionAt(subAt, lenSub)
+	j := 0 // current match length
+	for i := range lenWhole {
+		// Cache current value to avoid redundant calls to the 'at' accessor
+		valI := wholeAt(i)
+		for j > 0 && valI != subAt(j) {
+			j = pi[j-1]
+		}
+		if valI == subAt(j) {
+			j++
+		}
+		if j == lenSub {
+			return i - j + 1, true
+		}
+	}
+	return -1, false
 }

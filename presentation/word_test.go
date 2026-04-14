@@ -234,25 +234,25 @@ func TestAt(t *testing.T) {
 	}
 }
 
-func TestSubRawWordFirstMatch(t *testing.T) {
+func TestSubWordFirstMatch(t *testing.T) {
 	tests := []struct {
 		name  string
-		whole RawWord
-		sub   RawWord
+		whole Word
+		sub   Word
 		wantInt int
 		wantBool  bool
 	}{
 		{
 			name:  "subword",
-			whole: RawWord{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
-			sub:   RawWord{{6, -7}, {3, 1}},
+			whole: presentation.NewWord(RawWord{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}}),
+			sub:   presentation.NewWord(RawWord{{6, -7}, {3, 1}}),
 			wantInt: 5,
 			wantBool:  true,
 		},
 		{
 			name:  "not subword",
-			whole: RawWord{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}},
-			sub:   RawWord{{6, -7}, {2, -3}},
+			whole: presentation.NewWord(RawWord{{1, 2}, {2, -3}, {6, -7}, {3, 1}, {4, 7}}),
+			sub:   presentation.NewWord(RawWord{{6, -7}, {2, -3}}),
 			wantInt: -1,
 			wantBool:  false,
 		},
@@ -260,9 +260,9 @@ func TestSubRawWordFirstMatch(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotInt, gotBool := presentation.SubRawWordFirstMatch(tt.sub, tt.whole)
+			gotInt, gotBool := presentation.SubWordFirstMatch(tt.sub, tt.whole)
 			if gotBool != tt.wantBool {
-				t.Fatalf("IsSubword(%v, %v) = %v, %v, want %v, %v", tt.sub, tt.whole, gotInt, gotBool, tt.wantInt, tt.wantBool)
+				t.Fatalf("SubWordFirstMatch(%v, %v) = %v, %v, want %v, %v", tt.sub, tt.whole, gotInt, gotBool, tt.wantInt, tt.wantBool)
 			}
 		})
 	}
