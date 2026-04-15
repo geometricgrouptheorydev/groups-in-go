@@ -3,6 +3,13 @@ package presentation
 // Here are some helper functions that use the KMP prefix function on slices
 // This will allow multiple functions to be have O(n) time complexity rather than O(n^2)
 
+//First, we set up the following interface
+type Indexable[T any] interface {
+    At(i int) T
+    Len() int
+    Slice(i, j int) Indexable[T]
+}
+
 // This first batch of functions use the standard slice indexing
 // This batch left here as legacy code that is no longer used by the package
 // See the second batch below for the functions used by the package
@@ -262,4 +269,20 @@ func KMPSubFirstMatchAt[T comparable](subAt, wholeAt func(int) T, lenSub, lenWho
 		}
 	}
 	return -1, false
+}
+
+// Input: Method value on a composite data type and length of the composite data
+// e.g. for Words, it would correspond to KMPCheckRepeatsAtAt(w.At, Len(w))
+// Checks if w is a slice that is a repeated subslice
+func KMPCheckRepeatsAt[T comparable](at func(int) T, length int) bool {
+	if length == 0 {
+		return false
+	}
+	pi := KMPPrefixFunctionAt(at, length)
+	n := pi[length-1]
+	k := length - n
+	
+	// A string is a power of some substring if and only if 
+	// the length is a multiple of the smallest period k.
+	return n > 0 && length%k == 0
 }

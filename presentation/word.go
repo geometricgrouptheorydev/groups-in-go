@@ -37,7 +37,7 @@ func EmptyWord() Word       { return NewWord(EmptyRawWord()) }
 func CompactLen(w Word) int { return len(w.seq) } 
 
 // Gives the true length of a word (sum of absolute exponents of all generators).
-func Len(w Word) int { return w.offsets[len(w.offsets) - 1] }
+func (w Word)Len() int { return w.offsets[len(w.offsets) - 1] }
 
 func ConcatRawWord(a, b RawWord) RawWord { return append(append(RawWord{}, a...), b...) } //double appends for immutability
 func ConcatWord(v, w Word) Word          { return NewWord(ConcatRawWord(v.seq, w.seq)) }
@@ -192,7 +192,7 @@ func (w Word) At(i int) int {
 // This function can also be used to find any match at all by ignoring the integer returned
 // This function makes use of the Word struct metadata so a RawWord version does not exist
 func SubWordFirstMatch(sub, whole Word) (int, bool) {
-	return KMPSubFirstMatchAt(sub.At, whole.At, Len(sub), Len(whole))
+	return KMPSubFirstMatchAt(sub.At, whole.At, sub.Len(), whole.Len())
 }
 
 // Use only on RawWords that are already expanded
