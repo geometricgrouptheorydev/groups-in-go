@@ -16,7 +16,7 @@ const (
 	Dehn Class = "dehn"
 )
 
-//helper to copy class maps definied here without mutating them. 
+//helper to copy class maps defined here without mutating them. 
 //fallback to reset group classes upon error to be added
 func (G *GroupPresentation) addClasses(newClasses map[Class]bool) error {
 	for c := range newClasses { 

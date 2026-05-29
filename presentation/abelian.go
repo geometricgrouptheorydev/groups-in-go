@@ -27,7 +27,7 @@ func (G *GroupPresentation) CheckCommutativityRelators() (bool, bool, error) {
 		if len(G.rel) == 0 {
 			return true, true, nil
 		} else {
-			return true, false, nil //useless relations are already discared with in NewGroupPresentation so we have a finite cyclic group here
+			return true, false, nil //useless relations are already discarded with in NewGroupPresentation so we have a finite cyclic group here
 		}
 	}
 

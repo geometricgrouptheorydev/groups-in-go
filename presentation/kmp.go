@@ -34,7 +34,7 @@ func KMPPrefixFunction[T comparable](w []T) []int {
 	return pi
 }
 
-// Returns the indices where each occurence of sub appears in whole
+// Returns the indices where each occurrence of sub appears in whole
 func KMPSearchSub[T comparable](sub, whole []T) []int {
 	// Take care of the trivial cases
 	if len(sub) == 0 {
@@ -47,7 +47,7 @@ func KMPSearchSub[T comparable](sub, whole []T) []int {
 		nowhere := make([]int, 0)
 		return nowhere
 	}
-	occurences := make([]int, 0)
+	occurrences := make([]int, 0)
 	pi := KMPPrefixFunction(sub)
 	j := 0 // current match length
 	for i := range whole {
@@ -58,11 +58,11 @@ func KMPSearchSub[T comparable](sub, whole []T) []int {
 			j++
 		}
 		if j == len(sub) {
-			occurences = append(occurences, i-j+1)
+			occurrences = append(occurrences, i-j+1)
 			j = pi[j-1]
 		}
 	}
-	return occurences
+	return occurrences
 }
 
 
@@ -207,9 +207,9 @@ func KMPPrefixFunctionAt[T comparable](at func(int) T, length int) []int {
 	return pi
 }
 
-// Input: Method values on two composite data type and their lenghts
+// Input: Method values on two composite data type and their lengths
 // e.g. for Words, it would correspond to KMPSearchSubAt(sub.At, whole.At, Len(sub), Len(whole))
-// Returns the indices where each occurence of sub appears in whole
+// Returns the indices where each occurrence of sub appears in whole
 func KMPSearchSubAt[T comparable](subAt, wholeAt func(int) T, lenSub, lenWhole int) []int {
 	// Take care of the trivial cases
 	if lenSub == 0 {
@@ -222,7 +222,7 @@ func KMPSearchSubAt[T comparable](subAt, wholeAt func(int) T, lenSub, lenWhole i
 		nowhere := make([]int, 0)
 		return nowhere
 	}
-	occurences := make([]int, 0)
+	occurrences := make([]int, 0)
 	pi := KMPPrefixFunctionAt(subAt, lenSub)
 	j := 0 // current match length
 	for i := range lenWhole {
@@ -235,14 +235,14 @@ func KMPSearchSubAt[T comparable](subAt, wholeAt func(int) T, lenSub, lenWhole i
 			j++
 		}
 		if j == lenSub {
-			occurences = append(occurences, i-j+1)
+			occurrences = append(occurrences, i-j+1)
 			j = pi[j-1]
 		}
 	}
-	return occurences
+	return occurrences
 }
 
-// Input: Method values on two composite data type and their lenghts
+// Input: Method values on two composite data type and their lengths
 // e.g. for Words, it would correspond to KMPSubFirstMatchAt(sub.At, whole.At, Len(sub), Len(whole))
 // Returns the index of the start of the first match of sub in whole and true if there is a match
 // Otherwise, return -1 and false (-1 is used as that is not a valid index in Go, always check the boolean to avoid panics)

@@ -1,6 +1,6 @@
 package presentation
 
-//In this file, we'll have the word reduction methods based on the different group presenetation classes
+//In this file, we'll have the word reduction methods based on the different group presentation classes
 //reductions ordered in levels of power
 
 // the higher the priority the better the reduction algorithm for computation!
