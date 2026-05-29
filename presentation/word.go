@@ -186,6 +186,24 @@ func (w Word) At(i int) int {
 	return val[0]
 }
 
+func (w Word) Slice(i, j int) Word {
+	if i < 0 || j < i || j > w.offsets[len(w.offsets)-1] {
+		panic("invalid index")
+	}
+	if i == j {
+		return EmptyWord()
+	}
+
+	left, right := largestSmaller(w.offsets, i), smallestLargerOrEq(w.offsets, j)
+	// w.offsets has always 0 as first entry and total length as last entry so left and right are valid indices
+	
+	// Copy the range to keep the original Word immutable
+	raw := make([][2]int, right-left)
+	copy(raw, w.seq[left:right])
+	// Adjust the start and end exponents
+	return NewWord(raw)
+}
+
 // Returns the index of the start of the first match of sub in whole (expanded) and true if there is a match
 // For example SubWordFirstMatch(NewWord({{1,1},{3,2}}),NewWord({{2,7},{1,3},{3,4}})) returns 9, true
 // Otherwise, return -1 and false (-1 is used as that is not a valid index in Go, always check the boolean to avoid panics)

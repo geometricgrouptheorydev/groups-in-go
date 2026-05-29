@@ -40,3 +40,37 @@ func reverseSlice[T comparable](s []T) []T {
 	}
 	return reversed
 }
+
+// Given an []int s with entries in increasing order and a int i, finds the index of the largest entry of s smaller than i
+// If no such index exists (i is smaller than s[0]), it returns len(offsets).
+func largestSmaller(s []int, i int) int {
+	lo, hi := 0, len(s)-1
+	result := -1
+	for lo <= hi {
+		mid := (lo + hi) / 2
+		if s[mid] < i {
+			result = mid
+			lo = mid + 1
+		} else {
+			hi = mid - 1
+		}
+	}
+	return result
+}
+
+// returns the smallest index k such that offsets[k] >= j.
+// If no such index exists (j is larger than ), it returns len(offsets).
+func smallestLargerOrEq(s []int, j int) int {
+	lo, hi := 0, len(s)-1
+	result := len(s) 
+	for lo <= hi {
+		mid := (lo + hi) / 2
+		if s[mid] >= j {
+			result = mid
+			hi = mid - 1 
+		} else {
+			lo = mid + 1
+		}
+	}
+	return result
+}
