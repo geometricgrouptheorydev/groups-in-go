@@ -10,7 +10,7 @@ Bridging programming and group theory is highly non-trivial, and as new research
 
 ## Tutorial
 
-This project is a Go library, hence the first step is to import this repository's ```presentation`` package. We will take the group $G = \mathbb{Z} \times \mathbb{Z} / 2 \mathbb{Z}$ as an example, which has a presentation $\langle a , b | aba^{-1}b^{-1}, b^2 \rangle$.
+This project is a Go library, hence the first step is to import this repository's `presentation` package. We will take the group $G = \mathbb{Z} \times \mathbb{Z} / 2 \mathbb{Z}$ as an example, which has a presentation $\langle a , b | aba^{-1}b^{-1}, b^2 \rangle$.
 
 We start by constructing the relations. In this library, words are defined using generator exponent pairs; the first generator is 0, the second generator is 1, and so on.
 
